@@ -1,15 +1,15 @@
-'use client'
+"use client"
 
-import type React from 'react'
+import type React from "react"
 
-import {useState} from 'react'
-import Link from 'next/link'
-import {Button} from '@/components/ui/button'
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
-import {Input} from '@/components/ui/input'
-import {Label} from '@/components/ui/label'
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
-import {Eye, EyeOff} from 'lucide-react'
+import { useState } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -17,12 +17,12 @@ export default function AuthPage() {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('Login submitted')
+    console.log("Login submitted")
   }
 
   const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('Registration submitted')
+    console.log("Registration submitted")
   }
 
   return (
@@ -73,7 +73,7 @@ export default function AuthPage() {
                     <div className="relative">
                       <Input
                         id="login-password"
-                        type={showPassword ? 'text' : 'password'}
+                        type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         required
                         className="pr-10"
@@ -83,7 +83,8 @@ export default function AuthPage() {
                         variant="ghost"
                         size="icon"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}>
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
                         {showPassword ? (
                           <EyeOff className="w-4 h-4 text-muted-foreground" />
                         ) : (
@@ -117,7 +118,7 @@ export default function AuthPage() {
                     <div className="relative">
                       <Input
                         id="register-password"
-                        type={showPassword ? 'text' : 'password'}
+                        type={showPassword ? "text" : "password"}
                         placeholder="Create a password"
                         required
                         className="pr-10"
@@ -127,7 +128,8 @@ export default function AuthPage() {
                         variant="ghost"
                         size="icon"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}>
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
                         {showPassword ? (
                           <EyeOff className="w-4 h-4 text-muted-foreground" />
                         ) : (
@@ -141,7 +143,7 @@ export default function AuthPage() {
                     <div className="relative">
                       <Input
                         id="register-confirm-password"
-                        type={showConfirmPassword ? 'text' : 'password'}
+                        type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm your password"
                         required
                         className="pr-10"
@@ -151,7 +153,8 @@ export default function AuthPage() {
                         variant="ghost"
                         size="icon"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      >
                         {showConfirmPassword ? (
                           <EyeOff className="w-4 h-4 text-muted-foreground" />
                         ) : (
@@ -177,4 +180,3 @@ export default function AuthPage() {
     </div>
   )
 }
-

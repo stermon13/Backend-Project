@@ -26,7 +26,7 @@ export const registerAction = publicFormAction({
     logger.info(`New session started: ${session.id}, ends at ${session.activeUntil.toISOString()}`)
 
     await setSessionCookie(session)
-    redirect('/contacts')
+    redirect('/dashboard')
   },
   functionName: 'Register action',
   globalErrorMessage: "We couldn't create an account for you, please try again or log in with an existing account.",
@@ -65,7 +65,7 @@ export const signInAction = publicFormAction({
     await setSessionCookie(session)
 
     // De gebruiker is ingelogd, dus redirecten we naar de contactenpagina.
-    redirect('/contacts')
+    redirect('/dashboard')
   },
   functionName: 'Sign in action',
 })
@@ -109,7 +109,7 @@ export const signOutServerFunction = protectedServerFunction({
       await clearSessionCookie()
     }
 
-    redirect('/login')
+    redirect('/dashboard')
   },
   functionName: 'Sign out action',
 })

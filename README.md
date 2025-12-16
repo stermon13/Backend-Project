@@ -1,4 +1,8 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/ZQkUYFyq)
+
+Klik hieronder om bij de chat uit te komen.\
+[Ui chat in V0](https://v0.app/chat/call-of-cthulhu-app-qCIGh2uT2bn?b=b_cJa75peIh2K&ref=T2B1E5)
+
 # Opgave
 
 Voor het vak backend frameworks werk je **individueel** een project uit met Next.js, Tailwind, shadcn/ui, Prisma en
