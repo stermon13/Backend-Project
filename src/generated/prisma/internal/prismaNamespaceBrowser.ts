@@ -50,7 +50,22 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Session: 'Session'
+  Session: 'Session',
+  Character: 'Character',
+  CharacterCharacteristics: 'CharacterCharacteristics',
+  CharacterDerivedStats: 'CharacterDerivedStats',
+  CharacterSkill: 'CharacterSkill',
+  Skill: 'Skill',
+  Item: 'Item',
+  CharacterPossession: 'CharacterPossession',
+  CharacterContact: 'CharacterContact',
+  Spell: 'Spell',
+  Monster: 'Monster',
+  InvestigationSession: 'InvestigationSession',
+  Clue: 'Clue',
+  Location: 'Location',
+  Campaign: 'Campaign',
+  RollHistory: 'RollHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -90,6 +105,245 @@ export const SessionScalarFieldEnum = {
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
+export const CharacterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  occupation: 'occupation',
+  age: 'age',
+  sex: 'sex',
+  residence: 'residence',
+  birthplace: 'birthplace',
+  portraitUrl: 'portraitUrl',
+  campaignName: 'campaignName',
+  isNpc: 'isNpc',
+  npcRole: 'npcRole',
+  npcDescription: 'npcDescription',
+  userId: 'userId',
+  backstory: 'backstory',
+  ideologyBeliefs: 'ideologyBeliefs',
+  significantPeople: 'significantPeople',
+  meaningfulLocations: 'meaningfulLocations',
+  treasuredPossessions: 'treasuredPossessions',
+  traits: 'traits',
+  injuriesScars: 'injuriesScars',
+  phobiasManias: 'phobiasManias',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CharacterScalarFieldEnum = (typeof CharacterScalarFieldEnum)[keyof typeof CharacterScalarFieldEnum]
+
+
+export const CharacterCharacteristicsScalarFieldEnum = {
+  id: 'id',
+  strength: 'strength',
+  constitution: 'constitution',
+  size: 'size',
+  dexterity: 'dexterity',
+  appearance: 'appearance',
+  intelligence: 'intelligence',
+  power: 'power',
+  education: 'education',
+  characterId: 'characterId'
+} as const
+
+export type CharacterCharacteristicsScalarFieldEnum = (typeof CharacterCharacteristicsScalarFieldEnum)[keyof typeof CharacterCharacteristicsScalarFieldEnum]
+
+
+export const CharacterDerivedStatsScalarFieldEnum = {
+  id: 'id',
+  hitPointsCurrent: 'hitPointsCurrent',
+  hitPointsMax: 'hitPointsMax',
+  sanityCurrent: 'sanityCurrent',
+  sanityMax: 'sanityMax',
+  magicPointsCurrent: 'magicPointsCurrent',
+  luck: 'luck',
+  movement: 'movement',
+  build: 'build',
+  damageBonus: 'damageBonus',
+  characterId: 'characterId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CharacterDerivedStatsScalarFieldEnum = (typeof CharacterDerivedStatsScalarFieldEnum)[keyof typeof CharacterDerivedStatsScalarFieldEnum]
+
+
+export const CharacterSkillScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  characterId: 'characterId',
+  skillId: 'skillId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CharacterSkillScalarFieldEnum = (typeof CharacterSkillScalarFieldEnum)[keyof typeof CharacterSkillScalarFieldEnum]
+
+
+export const SkillScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SkillScalarFieldEnum = (typeof SkillScalarFieldEnum)[keyof typeof SkillScalarFieldEnum]
+
+
+export const ItemScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  description: 'description',
+  value: 'value',
+  weight: 'weight',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ItemScalarFieldEnum = (typeof ItemScalarFieldEnum)[keyof typeof ItemScalarFieldEnum]
+
+
+export const CharacterPossessionScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  characterId: 'characterId',
+  itemId: 'itemId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CharacterPossessionScalarFieldEnum = (typeof CharacterPossessionScalarFieldEnum)[keyof typeof CharacterPossessionScalarFieldEnum]
+
+
+export const CharacterContactScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  relationship: 'relationship',
+  description: 'description',
+  characterId: 'characterId'
+} as const
+
+export type CharacterContactScalarFieldEnum = (typeof CharacterContactScalarFieldEnum)[keyof typeof CharacterContactScalarFieldEnum]
+
+
+export const SpellScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  manaCost: 'manaCost',
+  castTime: 'castTime',
+  range: 'range',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SpellScalarFieldEnum = (typeof SpellScalarFieldEnum)[keyof typeof SpellScalarFieldEnum]
+
+
+export const MonsterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  str: 'str',
+  con: 'con',
+  siz: 'siz',
+  dex: 'dex',
+  int: 'int',
+  pow: 'pow',
+  hp: 'hp',
+  mp: 'mp',
+  moveRate: 'moveRate',
+  damageBonus: 'damageBonus',
+  build: 'build',
+  armor: 'armor',
+  attacks: 'attacks',
+  skills: 'skills',
+  sanityLoss: 'sanityLoss',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MonsterScalarFieldEnum = (typeof MonsterScalarFieldEnum)[keyof typeof MonsterScalarFieldEnum]
+
+
+export const InvestigationSessionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  date: 'date',
+  campaign: 'campaign',
+  sessionNumber: 'sessionNumber',
+  summary: 'summary',
+  details: 'details',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  campaignId: 'campaignId'
+} as const
+
+export type InvestigationSessionScalarFieldEnum = (typeof InvestigationSessionScalarFieldEnum)[keyof typeof InvestigationSessionScalarFieldEnum]
+
+
+export const ClueScalarFieldEnum = {
+  id: 'id',
+  description: 'description',
+  discoveredAt: 'discoveredAt',
+  InvestigationSessionId: 'InvestigationSessionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ClueScalarFieldEnum = (typeof ClueScalarFieldEnum)[keyof typeof ClueScalarFieldEnum]
+
+
+export const LocationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  InvestigationSessionId: 'InvestigationSessionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
+
+
+export const CampaignScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  edition: 'edition',
+  description: 'description',
+  status: 'status',
+  startedDate: 'startedDate',
+  sessionCount: 'sessionCount',
+  keeperId: 'keeperId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CampaignScalarFieldEnum = (typeof CampaignScalarFieldEnum)[keyof typeof CampaignScalarFieldEnum]
+
+
+export const RollHistoryScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  characterId: 'characterId',
+  result: 'result',
+  breakdown: 'breakdown',
+  outcome: 'outcome',
+  timestamp: 'timestamp',
+  skillId: 'skillId',
+  currentLuck: 'currentLuck',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RollHistoryScalarFieldEnum = (typeof RollHistoryScalarFieldEnum)[keyof typeof RollHistoryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -104,4 +358,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

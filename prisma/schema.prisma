@@ -17,15 +17,19 @@ datasource db {
 
 enum Role {
   User
+  Admin
+  Keeper
 }
 
 model User {
-  id       String    @id @unique @default(uuid()) @db.Uuid
-  email    String    @unique @db.VarChar(255)
-  password String
-  username String
-  role     Role      @default(User)
-  sessions Session[]
+  id        String      @id @unique @default(uuid()) @db.Uuid
+  email     String      @unique @db.VarChar(255)
+  password  String
+  username  String
+  role      Role        @default(User)
+  sessions  Session[]
+  Character Character[]
+  Campaign  Campaign[]
 }
 
 model Session {
@@ -34,4 +38,269 @@ model Session {
   activeUntil DateTime
   userId      String   @db.Uuid
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Character {
+  id             String  @id @default(uuid()) @db.Uuid
+  name           String
+  occupation     String
+  age            Int
+  sex            String
+  residence      String
+  birthplace     String
+  portraitUrl    String?
+  campaignName   String?
+  isNpc          Boolean @default(false)
+  npcRole        String?
+  npcDescription String?
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  characteristics CharacterCharacteristics?
+  derivedStats    CharacterDerivedStats?
+  skills          CharacterSkill[]
+  possessions     CharacterPossession[]
+  contacts        CharacterContact[]
+
+  backstory            String?
+  ideologyBeliefs      String?
+  significantPeople    String?
+  meaningfulLocations  String?
+  treasuredPossessions String?
+  traits               String?
+  injuriesScars        String?
+  phobiasManias        String?
+
+  createdAt                          DateTime               @default(now())
+  updatedAt                          DateTime               @updatedAt
+  Spell                              Spell[]                @relation("CharacterSpells")
+  investigationSessionsAsNpc         InvestigationSession[] @relation("InvestigationSessionNpcs")
+  investigationSessionsAsParticipant InvestigationSession[] @relation("InvestigationSessionParticipants")
+  campaigns                          Campaign[]             @relation("CampaignInvestigators")
+  RollHistory                        RollHistory[]
+}
+
+model CharacterCharacteristics {
+  id String @id @default(uuid()) @db.Uuid
+
+  strength     Int
+  constitution Int
+  size         Int
+  dexterity    Int
+  appearance   Int
+  intelligence Int
+  power        Int
+  education    Int
+
+  characterId String    @unique @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+}
+
+model CharacterDerivedStats {
+  id                 String @id @default(uuid()) @db.Uuid
+  hitPointsCurrent   Int
+  hitPointsMax       Int
+  sanityCurrent      Int
+  sanityMax          Int
+  magicPointsCurrent Int
+  luck               Int
+  movement           Int
+  build              Int
+  damageBonus        String
+
+  characterId String    @unique @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CharacterSkill {
+  id          String @id @default(uuid()) @db.Uuid
+  value       Int
+  characterId String @db.Uuid
+  skillId     String @db.Uuid
+
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  skill     Skill     @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String
+  category    String // e.g., Fighting, Firearms, Social, etc.
+  description String?
+
+  characters CharacterSkill[]
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  RollHistory RollHistory[]
+}
+
+model Item {
+  id          String @id @default(uuid()) @db.Uuid
+  name        String
+  category    String // "weapon", "equipment", "book", "artifact", "consumable", "other"
+  description String
+  value       String // Value of the item, e.g., "$25", "Priceless"
+  weight      String // Weight of the item, e.g., "2 lbs", "0.5 kg"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  possessions CharacterPossession[]
+}
+
+model CharacterPossession {
+  id          String @id @default(uuid()) @db.Uuid
+  quantity    Int
+  characterId String @db.Uuid
+  itemId      String @db.Uuid
+
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  item      Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CharacterContact {
+  id           String @id @default(uuid()) @db.Uuid
+  name         String
+  relationship String
+  description  String
+
+  characterId String    @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+}
+
+model Spell {
+  id          String @id @default(uuid()) @db.Uuid
+  name        String
+  description String
+  manaCost    Int
+  castTime    Int
+  range       String
+
+  // Many-to-many relationship with Characters and Monsters
+  characters Character[] @relation("CharacterSpells")
+  monsters   Monster[]   @relation("MonsterSpells")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Monster {
+  id          String @id @default(uuid()) @db.Uuid
+  name        String
+  category    String // e.g., "mythos"
+  str         Int
+  con         Int
+  siz         Int
+  dex         Int
+  int         Int
+  pow         Int
+  hp          Int
+  mp          Int
+  moveRate    String
+  damageBonus String
+  build       Int
+  armor       String
+  attacks     String
+  skills      String
+  sanityLoss  String
+  description String
+
+  spells Spell[] @relation("MonsterSpells")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InvestigationSession {
+  id            String   @id @default(uuid()) @db.Uuid
+  title         String
+  date          DateTime
+  campaign      String
+  sessionNumber Int
+  summary       String
+  details       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  clues        Clue[]
+  locations    Location[]
+  npcs         Character[] @relation("InvestigationSessionNpcs")
+  participants Character[] @relation("InvestigationSessionParticipants")
+  Campaign     Campaign    @relation(fields: [campaignId], references: [id])
+  campaignId   String      @db.Uuid
+}
+
+model Clue {
+  id           String   @id @default(uuid()) @db.Uuid
+  description  String
+  discoveredAt DateTime
+
+  InvestigationSessionId String               @db.Uuid
+  investigationSession   InvestigationSession @relation(fields: [InvestigationSessionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Location {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+
+  InvestigationSessionId String               @db.Uuid
+  investigationSession   InvestigationSession @relation(fields: [InvestigationSessionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Campaign {
+  id           String   @id @default(uuid()) @db.Uuid
+  title        String
+  edition      String
+  description  String
+  status       String
+  startedDate  DateTime
+  sessionCount Int
+  keeperId     String   @db.Uuid
+  keeper       User     @relation(fields: [keeperId], references: [id], onDelete: Cascade)
+
+  // Relationships
+  investigationSessions InvestigationSession[]
+  investigators         Character[]            @relation("CampaignInvestigators")
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+}
+
+model RollHistory {
+  id          String    @id @default(uuid()) @db.Uuid
+  type        String // e.g., "dice", "skillCheck", "luckCheck"
+  characterId String    @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id])
+
+  // Common fields
+  result    Int
+  breakdown String
+  outcome   String // "success", "failure", "hard", "extreme", "critical", "fumble"
+  timestamp DateTime @default(now())
+
+  // Additional fields for specific roll types
+  skillId     String? @db.Uuid // For skill checks
+  skill       Skill?  @relation(fields: [skillId], references: [id]) // For skill checks
+  currentLuck Int? // For luck checks (optional)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

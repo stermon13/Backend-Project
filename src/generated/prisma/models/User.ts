@@ -183,6 +183,8 @@ export type UserWhereInput = {
   username?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   sessions?: Prisma.SessionListRelationFilter
+  Character?: Prisma.CharacterListRelationFilter
+  Campaign?: Prisma.CampaignListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -192,6 +194,8 @@ export type UserOrderByWithRelationInput = {
   username?: Prisma.SortOrder
   role?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
+  Character?: Prisma.CharacterOrderByRelationAggregateInput
+  Campaign?: Prisma.CampaignOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -204,6 +208,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   username?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   sessions?: Prisma.SessionListRelationFilter
+  Character?: Prisma.CharacterListRelationFilter
+  Campaign?: Prisma.CampaignListRelationFilter
 }, "id" | "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -235,6 +241,8 @@ export type UserCreateInput = {
   username: string
   role?: $Enums.Role
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  Character?: Prisma.CharacterCreateNestedManyWithoutUserInput
+  Campaign?: Prisma.CampaignCreateNestedManyWithoutKeeperInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -244,6 +252,8 @@ export type UserUncheckedCreateInput = {
   username: string
   role?: $Enums.Role
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  Character?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
+  Campaign?: Prisma.CampaignUncheckedCreateNestedManyWithoutKeeperInput
 }
 
 export type UserUpdateInput = {
@@ -253,6 +263,8 @@ export type UserUpdateInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  Character?: Prisma.CharacterUpdateManyWithoutUserNestedInput
+  Campaign?: Prisma.CampaignUpdateManyWithoutKeeperNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -262,6 +274,8 @@ export type UserUncheckedUpdateInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  Character?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
+  Campaign?: Prisma.CampaignUncheckedUpdateManyWithoutKeeperNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -339,12 +353,42 @@ export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
 }
 
+export type UserCreateNestedOneWithoutCharacterInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCharacterInput, Prisma.UserUncheckedCreateWithoutCharacterInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCharacterInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCharacterNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCharacterInput, Prisma.UserUncheckedCreateWithoutCharacterInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCharacterInput
+  upsert?: Prisma.UserUpsertWithoutCharacterInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCharacterInput, Prisma.UserUpdateWithoutCharacterInput>, Prisma.UserUncheckedUpdateWithoutCharacterInput>
+}
+
+export type UserCreateNestedOneWithoutCampaignInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignInput, Prisma.UserUncheckedCreateWithoutCampaignInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCampaignNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignInput, Prisma.UserUncheckedCreateWithoutCampaignInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignInput
+  upsert?: Prisma.UserUpsertWithoutCampaignInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCampaignInput, Prisma.UserUpdateWithoutCampaignInput>, Prisma.UserUncheckedUpdateWithoutCampaignInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
   password: string
   username: string
   role?: $Enums.Role
+  Character?: Prisma.CharacterCreateNestedManyWithoutUserInput
+  Campaign?: Prisma.CampaignCreateNestedManyWithoutKeeperInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -353,6 +397,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   password: string
   username: string
   role?: $Enums.Role
+  Character?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
+  Campaign?: Prisma.CampaignUncheckedCreateNestedManyWithoutKeeperInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -377,6 +423,8 @@ export type UserUpdateWithoutSessionsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  Character?: Prisma.CharacterUpdateManyWithoutUserNestedInput
+  Campaign?: Prisma.CampaignUpdateManyWithoutKeeperNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -385,6 +433,120 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  Character?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
+  Campaign?: Prisma.CampaignUncheckedUpdateManyWithoutKeeperNestedInput
+}
+
+export type UserCreateWithoutCharacterInput = {
+  id?: string
+  email: string
+  password: string
+  username: string
+  role?: $Enums.Role
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  Campaign?: Prisma.CampaignCreateNestedManyWithoutKeeperInput
+}
+
+export type UserUncheckedCreateWithoutCharacterInput = {
+  id?: string
+  email: string
+  password: string
+  username: string
+  role?: $Enums.Role
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  Campaign?: Prisma.CampaignUncheckedCreateNestedManyWithoutKeeperInput
+}
+
+export type UserCreateOrConnectWithoutCharacterInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCharacterInput, Prisma.UserUncheckedCreateWithoutCharacterInput>
+}
+
+export type UserUpsertWithoutCharacterInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCharacterInput, Prisma.UserUncheckedUpdateWithoutCharacterInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCharacterInput, Prisma.UserUncheckedCreateWithoutCharacterInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCharacterInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCharacterInput, Prisma.UserUncheckedUpdateWithoutCharacterInput>
+}
+
+export type UserUpdateWithoutCharacterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  Campaign?: Prisma.CampaignUpdateManyWithoutKeeperNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCharacterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  Campaign?: Prisma.CampaignUncheckedUpdateManyWithoutKeeperNestedInput
+}
+
+export type UserCreateWithoutCampaignInput = {
+  id?: string
+  email: string
+  password: string
+  username: string
+  role?: $Enums.Role
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  Character?: Prisma.CharacterCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCampaignInput = {
+  id?: string
+  email: string
+  password: string
+  username: string
+  role?: $Enums.Role
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  Character?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCampaignInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCampaignInput, Prisma.UserUncheckedCreateWithoutCampaignInput>
+}
+
+export type UserUpsertWithoutCampaignInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCampaignInput, Prisma.UserUncheckedUpdateWithoutCampaignInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCampaignInput, Prisma.UserUncheckedCreateWithoutCampaignInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCampaignInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCampaignInput, Prisma.UserUncheckedUpdateWithoutCampaignInput>
+}
+
+export type UserUpdateWithoutCampaignInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  Character?: Prisma.CharacterUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCampaignInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  Character?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -394,10 +556,14 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
 
 export type UserCountOutputType = {
   sessions: number
+  Character: number
+  Campaign: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+  Character?: boolean | UserCountOutputTypeCountCharacterArgs
+  Campaign?: boolean | UserCountOutputTypeCountCampaignArgs
 }
 
 /**
@@ -417,6 +583,20 @@ export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.SessionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCharacterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCampaignArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CampaignWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -425,6 +605,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   username?: boolean
   role?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  Character?: boolean | Prisma.User$CharacterArgs<ExtArgs>
+  Campaign?: boolean | Prisma.User$CampaignArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -455,6 +637,8 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "username" | "role", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  Character?: boolean | Prisma.User$CharacterArgs<ExtArgs>
+  Campaign?: boolean | Prisma.User$CampaignArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -464,6 +648,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     sessions: Prisma.$SessionPayload<ExtArgs>[]
+    Character: Prisma.$CharacterPayload<ExtArgs>[]
+    Campaign: Prisma.$CampaignPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -866,6 +1052,8 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  Character<T extends Prisma.User$CharacterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$CharacterArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  Campaign<T extends Prisma.User$CampaignArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$CampaignArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1309,6 +1497,54 @@ export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
+}
+
+/**
+ * User.Character
+ */
+export type User$CharacterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Character
+   */
+  select?: Prisma.CharacterSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Character
+   */
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CharacterInclude<ExtArgs> | null
+  where?: Prisma.CharacterWhereInput
+  orderBy?: Prisma.CharacterOrderByWithRelationInput | Prisma.CharacterOrderByWithRelationInput[]
+  cursor?: Prisma.CharacterWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CharacterScalarFieldEnum | Prisma.CharacterScalarFieldEnum[]
+}
+
+/**
+ * User.Campaign
+ */
+export type User$CampaignArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Campaign
+   */
+  select?: Prisma.CampaignSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Campaign
+   */
+  omit?: Prisma.CampaignOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CampaignInclude<ExtArgs> | null
+  where?: Prisma.CampaignWhereInput
+  orderBy?: Prisma.CampaignOrderByWithRelationInput | Prisma.CampaignOrderByWithRelationInput[]
+  cursor?: Prisma.CampaignWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CampaignScalarFieldEnum | Prisma.CampaignScalarFieldEnum[]
 }
 
 /**

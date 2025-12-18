@@ -55,8 +55,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider   = \"prisma-client\"\n  engineType = \"client\"\n  output     = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum Role {\n  User\n}\n\nmodel User {\n  id       String    @id @unique @default(uuid()) @db.Uuid\n  email    String    @unique @db.VarChar(255)\n  password String\n  username String\n  role     Role      @default(User)\n  sessions Session[]\n}\n\nmodel Session {\n  id          String   @id @unique @default(uuid()) @db.Uuid\n  activeFrom  DateTime @default(now())\n  activeUntil DateTime\n  userId      String   @db.Uuid\n  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n",
-  "inlineSchemaHash": "d6b71ce974ac026f4aba778c4759ce78e85d477e30ea65f4b1088ed85cf39a1a",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider   = \"prisma-client\"\n  engineType = \"client\"\n  output     = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum Role {\n  User\n  Admin\n  Keeper\n}\n\nmodel User {\n  id        String      @id @unique @default(uuid()) @db.Uuid\n  email     String      @unique @db.VarChar(255)\n  password  String\n  username  String\n  role      Role        @default(User)\n  sessions  Session[]\n  Character Character[]\n  Campaign  Campaign[]\n}\n\nmodel Session {\n  id          String   @id @unique @default(uuid()) @db.Uuid\n  activeFrom  DateTime @default(now())\n  activeUntil DateTime\n  userId      String   @db.Uuid\n  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel Character {\n  id             String  @id @default(uuid()) @db.Uuid\n  name           String\n  occupation     String\n  age            Int\n  sex            String\n  residence      String\n  birthplace     String\n  portraitUrl    String?\n  campaignName   String?\n  isNpc          Boolean @default(false)\n  npcRole        String?\n  npcDescription String?\n\n  userId String @db.Uuid\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  characteristics CharacterCharacteristics?\n  derivedStats    CharacterDerivedStats?\n  skills          CharacterSkill[]\n  possessions     CharacterPossession[]\n  contacts        CharacterContact[]\n\n  backstory            String?\n  ideologyBeliefs      String?\n  significantPeople    String?\n  meaningfulLocations  String?\n  treasuredPossessions String?\n  traits               String?\n  injuriesScars        String?\n  phobiasManias        String?\n\n  createdAt                          DateTime               @default(now())\n  updatedAt                          DateTime               @updatedAt\n  Spell                              Spell[]                @relation(\"CharacterSpells\")\n  investigationSessionsAsNpc         InvestigationSession[] @relation(\"InvestigationSessionNpcs\")\n  investigationSessionsAsParticipant InvestigationSession[] @relation(\"InvestigationSessionParticipants\")\n  campaigns                          Campaign[]             @relation(\"CampaignInvestigators\")\n  RollHistory                        RollHistory[]\n}\n\nmodel CharacterCharacteristics {\n  id String @id @default(uuid()) @db.Uuid\n\n  strength     Int\n  constitution Int\n  size         Int\n  dexterity    Int\n  appearance   Int\n  intelligence Int\n  power        Int\n  education    Int\n\n  characterId String    @unique @db.Uuid\n  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)\n}\n\nmodel CharacterDerivedStats {\n  id                 String @id @default(uuid()) @db.Uuid\n  hitPointsCurrent   Int\n  hitPointsMax       Int\n  sanityCurrent      Int\n  sanityMax          Int\n  magicPointsCurrent Int\n  luck               Int\n  movement           Int\n  build              Int\n  damageBonus        String\n\n  characterId String    @unique @db.Uuid\n  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel CharacterSkill {\n  id          String @id @default(uuid()) @db.Uuid\n  value       Int\n  characterId String @db.Uuid\n  skillId     String @db.Uuid\n\n  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)\n  skill     Skill     @relation(fields: [skillId], references: [id], onDelete: Cascade)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Skill {\n  id          String  @id @default(uuid()) @db.Uuid\n  name        String\n  category    String // e.g., Fighting, Firearms, Social, etc.\n  description String?\n\n  characters CharacterSkill[]\n\n  createdAt   DateTime      @default(now())\n  updatedAt   DateTime      @updatedAt\n  RollHistory RollHistory[]\n}\n\nmodel Item {\n  id          String @id @default(uuid()) @db.Uuid\n  name        String\n  category    String // \"weapon\", \"equipment\", \"book\", \"artifact\", \"consumable\", \"other\"\n  description String\n  value       String // Value of the item, e.g., \"$25\", \"Priceless\"\n  weight      String // Weight of the item, e.g., \"2 lbs\", \"0.5 kg\"\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  possessions CharacterPossession[]\n}\n\nmodel CharacterPossession {\n  id          String @id @default(uuid()) @db.Uuid\n  quantity    Int\n  characterId String @db.Uuid\n  itemId      String @db.Uuid\n\n  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)\n  item      Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel CharacterContact {\n  id           String @id @default(uuid()) @db.Uuid\n  name         String\n  relationship String\n  description  String\n\n  characterId String    @db.Uuid\n  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)\n}\n\nmodel Spell {\n  id          String @id @default(uuid()) @db.Uuid\n  name        String\n  description String\n  manaCost    Int\n  castTime    Int\n  range       String\n\n  // Many-to-many relationship with Characters and Monsters\n  characters Character[] @relation(\"CharacterSpells\")\n  monsters   Monster[]   @relation(\"MonsterSpells\")\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Monster {\n  id          String @id @default(uuid()) @db.Uuid\n  name        String\n  category    String // e.g., \"mythos\"\n  str         Int\n  con         Int\n  siz         Int\n  dex         Int\n  int         Int\n  pow         Int\n  hp          Int\n  mp          Int\n  moveRate    String\n  damageBonus String\n  build       Int\n  armor       String\n  attacks     String\n  skills      String\n  sanityLoss  String\n  description String\n\n  spells Spell[] @relation(\"MonsterSpells\")\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel InvestigationSession {\n  id            String   @id @default(uuid()) @db.Uuid\n  title         String\n  date          DateTime\n  campaign      String\n  sessionNumber Int\n  summary       String\n  details       String\n  createdAt     DateTime @default(now())\n  updatedAt     DateTime @updatedAt\n\n  // Relationships\n  clues        Clue[]\n  locations    Location[]\n  npcs         Character[] @relation(\"InvestigationSessionNpcs\")\n  participants Character[] @relation(\"InvestigationSessionParticipants\")\n  Campaign     Campaign    @relation(fields: [campaignId], references: [id])\n  campaignId   String      @db.Uuid\n}\n\nmodel Clue {\n  id           String   @id @default(uuid()) @db.Uuid\n  description  String\n  discoveredAt DateTime\n\n  InvestigationSessionId String               @db.Uuid\n  investigationSession   InvestigationSession @relation(fields: [InvestigationSessionId], references: [id])\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Location {\n  id          String  @id @default(uuid()) @db.Uuid\n  name        String\n  description String?\n\n  InvestigationSessionId String               @db.Uuid\n  investigationSession   InvestigationSession @relation(fields: [InvestigationSessionId], references: [id])\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Campaign {\n  id           String   @id @default(uuid()) @db.Uuid\n  title        String\n  edition      String\n  description  String\n  status       String\n  startedDate  DateTime\n  sessionCount Int\n  keeperId     String   @db.Uuid\n  keeper       User     @relation(fields: [keeperId], references: [id], onDelete: Cascade)\n\n  // Relationships\n  investigationSessions InvestigationSession[]\n  investigators         Character[]            @relation(\"CampaignInvestigators\")\n  createdAt             DateTime               @default(now())\n  updatedAt             DateTime               @updatedAt\n}\n\nmodel RollHistory {\n  id          String    @id @default(uuid()) @db.Uuid\n  type        String // e.g., \"dice\", \"skillCheck\", \"luckCheck\"\n  characterId String    @db.Uuid\n  character   Character @relation(fields: [characterId], references: [id])\n\n  // Common fields\n  result    Int\n  breakdown String\n  outcome   String // \"success\", \"failure\", \"hard\", \"extreme\", \"critical\", \"fumble\"\n  timestamp DateTime @default(now())\n\n  // Additional fields for specific roll types\n  skillId     String? @db.Uuid // For skill checks\n  skill       Skill?  @relation(fields: [skillId], references: [id]) // For skill checks\n  currentLuck Int? // For luck checks (optional)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "fa7e291eec05925173382fc370837c33a85a4c2df7c426f4e4b2b493aa54c020",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},
@@ -66,7 +66,7 @@ const config: runtime.GetPrismaClientConfig = {
   "dirname": ""
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"}],\"dbName\":null},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"activeFrom\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"activeUntil\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"},{\"name\":\"Character\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CharacterToUser\"},{\"name\":\"Campaign\",\"kind\":\"object\",\"type\":\"Campaign\",\"relationName\":\"CampaignToUser\"}],\"dbName\":null},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"activeFrom\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"activeUntil\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"}],\"dbName\":null},\"Character\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"occupation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"age\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"sex\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"residence\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"birthplace\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"portraitUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaignName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isNpc\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"npcRole\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"npcDescription\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"CharacterToUser\"},{\"name\":\"characteristics\",\"kind\":\"object\",\"type\":\"CharacterCharacteristics\",\"relationName\":\"CharacterToCharacterCharacteristics\"},{\"name\":\"derivedStats\",\"kind\":\"object\",\"type\":\"CharacterDerivedStats\",\"relationName\":\"CharacterToCharacterDerivedStats\"},{\"name\":\"skills\",\"kind\":\"object\",\"type\":\"CharacterSkill\",\"relationName\":\"CharacterToCharacterSkill\"},{\"name\":\"possessions\",\"kind\":\"object\",\"type\":\"CharacterPossession\",\"relationName\":\"CharacterToCharacterPossession\"},{\"name\":\"contacts\",\"kind\":\"object\",\"type\":\"CharacterContact\",\"relationName\":\"CharacterToCharacterContact\"},{\"name\":\"backstory\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ideologyBeliefs\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"significantPeople\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"meaningfulLocations\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"treasuredPossessions\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"traits\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"injuriesScars\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phobiasManias\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"Spell\",\"kind\":\"object\",\"type\":\"Spell\",\"relationName\":\"CharacterSpells\"},{\"name\":\"investigationSessionsAsNpc\",\"kind\":\"object\",\"type\":\"InvestigationSession\",\"relationName\":\"InvestigationSessionNpcs\"},{\"name\":\"investigationSessionsAsParticipant\",\"kind\":\"object\",\"type\":\"InvestigationSession\",\"relationName\":\"InvestigationSessionParticipants\"},{\"name\":\"campaigns\",\"kind\":\"object\",\"type\":\"Campaign\",\"relationName\":\"CampaignInvestigators\"},{\"name\":\"RollHistory\",\"kind\":\"object\",\"type\":\"RollHistory\",\"relationName\":\"CharacterToRollHistory\"}],\"dbName\":null},\"CharacterCharacteristics\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"strength\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"constitution\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"size\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"dexterity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"appearance\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"intelligence\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"power\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"education\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"characterId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"character\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CharacterToCharacterCharacteristics\"}],\"dbName\":null},\"CharacterDerivedStats\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hitPointsCurrent\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"hitPointsMax\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"sanityCurrent\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"sanityMax\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"magicPointsCurrent\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"luck\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movement\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"build\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"damageBonus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"characterId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"character\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CharacterToCharacterDerivedStats\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"CharacterSkill\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"characterId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"skillId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"character\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CharacterToCharacterSkill\"},{\"name\":\"skill\",\"kind\":\"object\",\"type\":\"Skill\",\"relationName\":\"CharacterSkillToSkill\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Skill\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"characters\",\"kind\":\"object\",\"type\":\"CharacterSkill\",\"relationName\":\"CharacterSkillToSkill\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"RollHistory\",\"kind\":\"object\",\"type\":\"RollHistory\",\"relationName\":\"RollHistoryToSkill\"}],\"dbName\":null},\"Item\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"weight\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"possessions\",\"kind\":\"object\",\"type\":\"CharacterPossession\",\"relationName\":\"CharacterPossessionToItem\"}],\"dbName\":null},\"CharacterPossession\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"characterId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"itemId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"character\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CharacterToCharacterPossession\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"Item\",\"relationName\":\"CharacterPossessionToItem\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"CharacterContact\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"relationship\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"characterId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"character\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CharacterToCharacterContact\"}],\"dbName\":null},\"Spell\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"manaCost\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"castTime\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"range\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"characters\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CharacterSpells\"},{\"name\":\"monsters\",\"kind\":\"object\",\"type\":\"Monster\",\"relationName\":\"MonsterSpells\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Monster\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"str\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"con\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"siz\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"dex\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"int\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"pow\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"hp\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"mp\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"moveRate\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"damageBonus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"build\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"armor\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attacks\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"skills\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sanityLoss\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"spells\",\"kind\":\"object\",\"type\":\"Spell\",\"relationName\":\"MonsterSpells\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"InvestigationSession\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"campaign\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sessionNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"details\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"clues\",\"kind\":\"object\",\"type\":\"Clue\",\"relationName\":\"ClueToInvestigationSession\"},{\"name\":\"locations\",\"kind\":\"object\",\"type\":\"Location\",\"relationName\":\"InvestigationSessionToLocation\"},{\"name\":\"npcs\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"InvestigationSessionNpcs\"},{\"name\":\"participants\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"InvestigationSessionParticipants\"},{\"name\":\"Campaign\",\"kind\":\"object\",\"type\":\"Campaign\",\"relationName\":\"CampaignToInvestigationSession\"},{\"name\":\"campaignId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"Clue\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"discoveredAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"InvestigationSessionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"investigationSession\",\"kind\":\"object\",\"type\":\"InvestigationSession\",\"relationName\":\"ClueToInvestigationSession\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Location\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"InvestigationSessionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"investigationSession\",\"kind\":\"object\",\"type\":\"InvestigationSession\",\"relationName\":\"InvestigationSessionToLocation\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Campaign\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"edition\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startedDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"sessionCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"keeperId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"keeper\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"CampaignToUser\"},{\"name\":\"investigationSessions\",\"kind\":\"object\",\"type\":\"InvestigationSession\",\"relationName\":\"CampaignToInvestigationSession\"},{\"name\":\"investigators\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CampaignInvestigators\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"RollHistory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"characterId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"character\",\"kind\":\"object\",\"type\":\"Character\",\"relationName\":\"CharacterToRollHistory\"},{\"name\":\"result\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"breakdown\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"outcome\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"skillId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"skill\",\"kind\":\"object\",\"type\":\"Skill\",\"relationName\":\"RollHistoryToSkill\"},{\"name\":\"currentLuck\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 config.engineWasm = undefined
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
@@ -234,6 +234,156 @@ export interface PrismaClient<
     * ```
     */
   get session(): Prisma.SessionDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.character`: Exposes CRUD operations for the **Character** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Characters
+    * const characters = await prisma.character.findMany()
+    * ```
+    */
+  get character(): Prisma.CharacterDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.characterCharacteristics`: Exposes CRUD operations for the **CharacterCharacteristics** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CharacterCharacteristics
+    * const characterCharacteristics = await prisma.characterCharacteristics.findMany()
+    * ```
+    */
+  get characterCharacteristics(): Prisma.CharacterCharacteristicsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.characterDerivedStats`: Exposes CRUD operations for the **CharacterDerivedStats** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CharacterDerivedStats
+    * const characterDerivedStats = await prisma.characterDerivedStats.findMany()
+    * ```
+    */
+  get characterDerivedStats(): Prisma.CharacterDerivedStatsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.characterSkill`: Exposes CRUD operations for the **CharacterSkill** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CharacterSkills
+    * const characterSkills = await prisma.characterSkill.findMany()
+    * ```
+    */
+  get characterSkill(): Prisma.CharacterSkillDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.skill`: Exposes CRUD operations for the **Skill** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Skills
+    * const skills = await prisma.skill.findMany()
+    * ```
+    */
+  get skill(): Prisma.SkillDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.item`: Exposes CRUD operations for the **Item** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Items
+    * const items = await prisma.item.findMany()
+    * ```
+    */
+  get item(): Prisma.ItemDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.characterPossession`: Exposes CRUD operations for the **CharacterPossession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CharacterPossessions
+    * const characterPossessions = await prisma.characterPossession.findMany()
+    * ```
+    */
+  get characterPossession(): Prisma.CharacterPossessionDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.characterContact`: Exposes CRUD operations for the **CharacterContact** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CharacterContacts
+    * const characterContacts = await prisma.characterContact.findMany()
+    * ```
+    */
+  get characterContact(): Prisma.CharacterContactDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.spell`: Exposes CRUD operations for the **Spell** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Spells
+    * const spells = await prisma.spell.findMany()
+    * ```
+    */
+  get spell(): Prisma.SpellDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.monster`: Exposes CRUD operations for the **Monster** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Monsters
+    * const monsters = await prisma.monster.findMany()
+    * ```
+    */
+  get monster(): Prisma.MonsterDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.investigationSession`: Exposes CRUD operations for the **InvestigationSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InvestigationSessions
+    * const investigationSessions = await prisma.investigationSession.findMany()
+    * ```
+    */
+  get investigationSession(): Prisma.InvestigationSessionDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.clue`: Exposes CRUD operations for the **Clue** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Clues
+    * const clues = await prisma.clue.findMany()
+    * ```
+    */
+  get clue(): Prisma.ClueDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.location`: Exposes CRUD operations for the **Location** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Locations
+    * const locations = await prisma.location.findMany()
+    * ```
+    */
+  get location(): Prisma.LocationDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.campaign`: Exposes CRUD operations for the **Campaign** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Campaigns
+    * const campaigns = await prisma.campaign.findMany()
+    * ```
+    */
+  get campaign(): Prisma.CampaignDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.rollHistory`: Exposes CRUD operations for the **RollHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RollHistories
+    * const rollHistories = await prisma.rollHistory.findMany()
+    * ```
+    */
+  get rollHistory(): Prisma.RollHistoryDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(dirname: string): PrismaClientConstructor {

@@ -51,3 +51,78 @@ export type User = Prisma.UserModel
  * 
  */
 export type Session = Prisma.SessionModel
+/**
+ * Model Character
+ * 
+ */
+export type Character = Prisma.CharacterModel
+/**
+ * Model CharacterCharacteristics
+ * 
+ */
+export type CharacterCharacteristics = Prisma.CharacterCharacteristicsModel
+/**
+ * Model CharacterDerivedStats
+ * 
+ */
+export type CharacterDerivedStats = Prisma.CharacterDerivedStatsModel
+/**
+ * Model CharacterSkill
+ * 
+ */
+export type CharacterSkill = Prisma.CharacterSkillModel
+/**
+ * Model Skill
+ * 
+ */
+export type Skill = Prisma.SkillModel
+/**
+ * Model Item
+ * 
+ */
+export type Item = Prisma.ItemModel
+/**
+ * Model CharacterPossession
+ * 
+ */
+export type CharacterPossession = Prisma.CharacterPossessionModel
+/**
+ * Model CharacterContact
+ * 
+ */
+export type CharacterContact = Prisma.CharacterContactModel
+/**
+ * Model Spell
+ * 
+ */
+export type Spell = Prisma.SpellModel
+/**
+ * Model Monster
+ * 
+ */
+export type Monster = Prisma.MonsterModel
+/**
+ * Model InvestigationSession
+ * 
+ */
+export type InvestigationSession = Prisma.InvestigationSessionModel
+/**
+ * Model Clue
+ * 
+ */
+export type Clue = Prisma.ClueModel
+/**
+ * Model Location
+ * 
+ */
+export type Location = Prisma.LocationModel
+/**
+ * Model Campaign
+ * 
+ */
+export type Campaign = Prisma.CampaignModel
+/**
+ * Model RollHistory
+ * 
+ */
+export type RollHistory = Prisma.RollHistoryModel
