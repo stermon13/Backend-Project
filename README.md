@@ -3,6 +3,16 @@
 Klik hieronder om bij de chat uit te komen.\
 [Ui chat in V0](https://v0.app/chat/call-of-cthulhu-app-qCIGh2uT2bn?b=b_cJa75peIh2K&ref=T2B1E5)
 
+login details 
+## Accounts logins
+
+| Role   | Email            | Password     |
+|--------|------------------|--------------|
+| Admin  | admin@arkham.edu | password123 |
+| Keeper | keeper@arkham.edu| password123 |
+| User   | user@arkham.edu  | password123 |
+
+
 # Opgave
 
 Voor het vak backend frameworks werk je **individueel** een project uit met Next.js, Tailwind, shadcn/ui, Prisma en
