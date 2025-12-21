@@ -1,6 +1,6 @@
 "use client"
 
-import {CampaignNav} from '@/components/custom/campaign-nav'
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -73,8 +73,7 @@ export default function MonsterDetailPage({ params }: { params: { id: string } }
 
   return (
     <div className="min-h-screen bg-background">
-      <CampaignNav />
-      <main className="container mx-auto px-4 py-8 max-w-5xl">
+            <main className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="mb-6">
           <Link href="/monsters">
             <Button variant="ghost" className="gap-2 mb-4">

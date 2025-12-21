@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import {CampaignNav} from '@/components/custom/campaign-nav'
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -275,8 +275,7 @@ export default function ToolsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <CampaignNav />
-      <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-serif font-bold text-foreground mb-2">Game Tools</h1>
           <p className="text-muted-foreground">Essential tools for running your Call of Cthulhu games</p>

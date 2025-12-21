@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import {CampaignNav} from '@/components/custom/campaign-nav'
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,28 +13,52 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-export default function NewMonsterPage() {
+export default function EditMonsterPage({ params }: { params: { id: string } }) {
   const router = useRouter()
+
+  // Mock data for UI display only
+  const monster = {
+    id: params.id,
+    name: "Deep One",
+    category: "mythos",
+    str: "130",
+    con: "70",
+    siz: "140",
+    dex: "50",
+    int: "50",
+    pow: "50",
+    hp: "21",
+    mp: "10",
+    moveRate: "8 / 10 swimming",
+    damageBonus: "+1D6",
+    build: "2",
+    armor: "2-point scales and hide",
+    attacks: "1 (claw or weapon)",
+    skills: "Fighting 60%, Swim 80%, Stealth 40%",
+    sanityLoss: "0/1D6",
+    spells: "None typically, but some may know Deep One Rituals",
+    description:
+      "Amphibious humanoids that serve the Great Old Ones. They possess fish-like features and an unsettling intelligence.",
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // UI only - backend will handle actual creation
-    router.push("/monsters")
+    // UI only - backend will handle actual update
+    router.push(`/monsters/${params.id}`)
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <CampaignNav />
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-6">
-          <Link href="/monsters">
+          <Link href={`/monsters/${params.id}`}>
             <Button variant="ghost" className="gap-2 mb-4">
               <ArrowLeft className="w-4 h-4" />
-              Back to Monsters
+              Back to Monster
             </Button>
           </Link>
-          <h1 className="text-4xl font-serif font-bold text-foreground mb-2">Add New Monster</h1>
-          <p className="text-muted-foreground">Create a new creature for your compendium</p>
+          <h1 className="text-4xl font-serif font-bold text-foreground mb-2">Edit Monster</h1>
+          <p className="text-muted-foreground">Update monster details</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -46,12 +70,12 @@ export default function NewMonsterPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Name</Label>
-                  <Input placeholder="e.g., Deep One, Shoggoth, Cultist" />
+                  <Input defaultValue={monster.name} />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Category</Label>
-                  <Select defaultValue="minor">
+                  <Select defaultValue={monster.category}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -69,10 +93,7 @@ export default function NewMonsterPage() {
 
                 <div className="space-y-2">
                   <Label>Description</Label>
-                  <Textarea
-                    placeholder="Describe the creature's appearance, behavior, and special abilities..."
-                    rows={4}
-                  />
+                  <Textarea defaultValue={monster.description} rows={4} />
                 </div>
               </CardContent>
             </Card>
@@ -85,27 +106,27 @@ export default function NewMonsterPage() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label>STR</Label>
-                    <Input placeholder="e.g., 75" />
+                    <Input defaultValue={monster.str} />
                   </div>
                   <div className="space-y-2">
                     <Label>CON</Label>
-                    <Input placeholder="e.g., 65" />
+                    <Input defaultValue={monster.con} />
                   </div>
                   <div className="space-y-2">
                     <Label>SIZ</Label>
-                    <Input placeholder="e.g., 70" />
+                    <Input defaultValue={monster.siz} />
                   </div>
                   <div className="space-y-2">
                     <Label>DEX</Label>
-                    <Input placeholder="e.g., 50" />
+                    <Input defaultValue={monster.dex} />
                   </div>
                   <div className="space-y-2">
                     <Label>INT</Label>
-                    <Input placeholder="e.g., 60" />
+                    <Input defaultValue={monster.int} />
                   </div>
                   <div className="space-y-2">
                     <Label>POW</Label>
-                    <Input placeholder="e.g., 55" />
+                    <Input defaultValue={monster.pow} />
                   </div>
                 </div>
               </CardContent>
@@ -119,27 +140,27 @@ export default function NewMonsterPage() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label>Hit Points</Label>
-                    <Input placeholder="e.g., 13" />
+                    <Input defaultValue={monster.hp} />
                   </div>
                   <div className="space-y-2">
                     <Label>Magic Points</Label>
-                    <Input placeholder="e.g., 10" />
+                    <Input defaultValue={monster.mp} />
                   </div>
                   <div className="space-y-2">
                     <Label>Move Rate</Label>
-                    <Input placeholder="e.g., 8 / 12 flying" />
+                    <Input defaultValue={monster.moveRate} />
                   </div>
                   <div className="space-y-2">
                     <Label>Damage Bonus</Label>
-                    <Input placeholder="e.g., +1D4" />
+                    <Input defaultValue={monster.damageBonus} />
                   </div>
                   <div className="space-y-2">
                     <Label>Build</Label>
-                    <Input placeholder="e.g., 1" />
+                    <Input defaultValue={monster.build} />
                   </div>
                   <div className="space-y-2">
                     <Label>Armor</Label>
-                    <Input placeholder="e.g., 2-point hide" />
+                    <Input defaultValue={monster.armor} />
                   </div>
                 </div>
               </CardContent>
@@ -152,33 +173,33 @@ export default function NewMonsterPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Attacks</Label>
-                  <Input placeholder="e.g., 2 (claws) or 1 (bite)" />
+                  <Input defaultValue={monster.attacks} />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Skills</Label>
-                  <Textarea placeholder="e.g., Fighting 50%, Stealth 70%, Swim 80%" rows={2} />
+                  <Textarea defaultValue={monster.skills} rows={2} />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Spells & Powers</Label>
-                  <Textarea placeholder="List any spells, special abilities, or powers..." rows={2} />
+                  <Textarea defaultValue={monster.spells} rows={2} />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Sanity Loss</Label>
-                  <Input placeholder="e.g., 0/1D6 or 1D10/1D100" />
+                  <Input defaultValue={monster.sanityLoss} />
                 </div>
               </CardContent>
             </Card>
 
             <div className="flex gap-3 justify-end">
-              <Link href="/monsters">
+              <Link href={`/monsters/${params.id}`}>
                 <Button type="button" variant="outline">
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit">Create Monster</Button>
+              <Button type="submit">Save Changes</Button>
             </div>
           </div>
         </form>

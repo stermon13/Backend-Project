@@ -109,7 +109,7 @@ export const signOutServerFunction = protectedServerFunction({
       await clearSessionCookie()
     }
 
-    redirect('/dashboard')
+    redirect('/')
   },
   functionName: 'Sign out action',
 })

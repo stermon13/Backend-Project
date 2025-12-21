@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import {CampaignNav} from '@/components/custom/campaign-nav'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -85,7 +84,6 @@ export default function CharactersPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <CampaignNav />
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>

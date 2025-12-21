@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation"
 import Link from "next/link"
-import {CampaignNav} from '@/components/custom/campaign-nav'
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -57,8 +57,7 @@ As night fell, the investigators experienced several disturbing phenomena: unexp
 
   return (
     <div className="min-h-screen bg-background">
-      <CampaignNav />
-      <main className="container mx-auto px-4 py-8 max-w-5xl">
+            <main className="container mx-auto px-4 py-8 max-w-5xl">
         <Link href="/stories">
           <Button variant="ghost" className="mb-6 gap-2">
             <ArrowLeft className="w-4 h-4" />

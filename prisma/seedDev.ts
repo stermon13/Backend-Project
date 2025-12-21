@@ -1,284 +1,292 @@
 import type { PrismaClient } from '@/generated/prisma/client'
 import { Role } from '@/generated/prisma/client'
+import {hashPassword} from '@/lib/passwordUtils'
+
 
 export const seedDev = async (prisma: PrismaClient) => {
   console.log('Running DEVELOPMENT seed (strict compliance)')
 
-/**
- * CoC 7e "common" skills (investigator sheet skills).
- * Source: Chaosium Call of Cthulhu RPG Wiki skill descriptions list. :contentReference[oaicite:1]{index=1}
- */
-const COC_COMMON_SKILLS: Array<{name: string; category: string}> = [
-  {name: 'Accounting', category: 'Knowledge'},
-  {name: 'Anthropology', category: 'Knowledge'},
-  {name: 'Appraise', category: 'Knowledge'},
-  {name: 'Archaeology', category: 'Knowledge'},
-  {name: 'Art/Craft', category: 'Technical'},
-  {name: 'Charm', category: 'Social'},
-  {name: 'Climb', category: 'Physical'},
-  {name: 'Credit Rating', category: 'Social'},
-  {name: 'Cthulhu Mythos', category: 'Knowledge'},
-  {name: 'Disguise', category: 'Social'},
-  {name: 'Dodge', category: 'Combat'},
-  {name: 'Drive Auto', category: 'Technical'},
-  {name: 'Electrical Repair', category: 'Technical'},
-  {name: 'Fast Talk', category: 'Social'},
-  {name: 'Fighting', category: 'Combat'},
-  {name: 'Firearms', category: 'Firearms'},
-  {name: 'First Aid', category: 'Knowledge'},
-  {name: 'History', category: 'Knowledge'},
-  {name: 'Intimidate', category: 'Social'},
-  {name: 'Jump', category: 'Physical'},
-  {name: 'Language (Other)', category: 'Knowledge'},
-  {name: 'Language (Own)', category: 'Knowledge'},
-  {name: 'Law', category: 'Knowledge'},
-  {name: 'Library Use', category: 'Investigation'},
-  {name: 'Listen', category: 'Investigation'},
-  {name: 'Locksmith', category: 'Technical'},
-  {name: 'Mechanical Repair', category: 'Technical'},
-  {name: 'Medicine', category: 'Knowledge'},
-  {name: 'Natural World', category: 'Knowledge'},
-  {name: 'Navigate', category: 'Knowledge'},
-  {name: 'Occult', category: 'Knowledge'},
-  {name: 'Operate Heavy Machinery', category: 'Technical'},
-  {name: 'Persuade', category: 'Social'},
-  {name: 'Pilot', category: 'Technical'},
-  {name: 'Psychoanalysis', category: 'Knowledge'},
-  {name: 'Psychology', category: 'Social'},
-  {name: 'Ride', category: 'Physical'},
-  {name: 'Science', category: 'Knowledge'},
-  {name: 'Sleight of Hand', category: 'Physical'},
-  {name: 'Spot Hidden', category: 'Investigation'},
-  {name: 'Stealth', category: 'Physical'},
-  {name: 'Survival', category: 'Physical'},
-  {name: 'Swim', category: 'Physical'},
-  {name: 'Throw', category: 'Combat'},
-  {name: 'Track', category: 'Investigation'},
-]
+  /**
+   * CoC 7e "common" skills (investigator sheet skills).
+   * Source: Chaosium Call of Cthulhu RPG Wiki skill descriptions list. :contentReference[oaicite:1]{index=1}
+   */
+  const COC_COMMON_SKILLS: Array<{name: string; category: string}> = [
+    {name: 'Accounting', category: 'Knowledge'},
+    {name: 'Anthropology', category: 'Knowledge'},
+    {name: 'Appraise', category: 'Knowledge'},
+    {name: 'Archaeology', category: 'Knowledge'},
+    {name: 'Art/Craft', category: 'Technical'},
+    {name: 'Charm', category: 'Social'},
+    {name: 'Climb', category: 'Physical'},
+    {name: 'Credit Rating', category: 'Social'},
+    {name: 'Cthulhu Mythos', category: 'Knowledge'},
+    {name: 'Disguise', category: 'Social'},
+    {name: 'Dodge', category: 'Combat'},
+    {name: 'Drive Auto', category: 'Technical'},
+    {name: 'Electrical Repair', category: 'Technical'},
+    {name: 'Fast Talk', category: 'Social'},
+    {name: 'Fighting', category: 'Combat'},
+    {name: 'Firearms', category: 'Firearms'},
+    {name: 'First Aid', category: 'Knowledge'},
+    {name: 'History', category: 'Knowledge'},
+    {name: 'Intimidate', category: 'Social'},
+    {name: 'Jump', category: 'Physical'},
+    {name: 'Language (Other)', category: 'Knowledge'},
+    {name: 'Language (Own)', category: 'Knowledge'},
+    {name: 'Law', category: 'Knowledge'},
+    {name: 'Library Use', category: 'Investigation'},
+    {name: 'Listen', category: 'Investigation'},
+    {name: 'Locksmith', category: 'Technical'},
+    {name: 'Mechanical Repair', category: 'Technical'},
+    {name: 'Medicine', category: 'Knowledge'},
+    {name: 'Natural World', category: 'Knowledge'},
+    {name: 'Navigate', category: 'Knowledge'},
+    {name: 'Occult', category: 'Knowledge'},
+    {name: 'Operate Heavy Machinery', category: 'Technical'},
+    {name: 'Persuade', category: 'Social'},
+    {name: 'Pilot', category: 'Technical'},
+    {name: 'Psychoanalysis', category: 'Knowledge'},
+    {name: 'Psychology', category: 'Social'},
+    {name: 'Ride', category: 'Physical'},
+    {name: 'Science', category: 'Knowledge'},
+    {name: 'Sleight of Hand', category: 'Physical'},
+    {name: 'Spot Hidden', category: 'Investigation'},
+    {name: 'Stealth', category: 'Physical'},
+    {name: 'Survival', category: 'Physical'},
+    {name: 'Swim', category: 'Physical'},
+    {name: 'Throw', category: 'Combat'},
+    {name: 'Track', category: 'Investigation'},
+  ]
 
-// 10+ items (1920s-ish, CoC-appropriate)
-const ITEMS: Array<{
-  name: string
-  category: string
-  description: string
-  value: string
-  weight: string
-}> = [
-  {name: 'Revolver (.38)', category: 'weapon', description: 'Common sidearm.', value: '$25', weight: '2 lbs'},
-  {
-    name: 'Shotgun (12-gauge)',
-    category: 'weapon',
-    description: 'Hunting / self-defense.',
-    value: '$40',
-    weight: '7 lbs',
-  },
-  {name: 'Notebook', category: 'equipment', description: 'Notes, sketches, clues.', value: '$1', weight: '0.5 lbs'},
-  {name: 'Flashlight', category: 'equipment', description: 'Electric flashlight.', value: '$3', weight: '1 lb'},
-  {name: 'First Aid Kit', category: 'equipment', description: 'Bandages and supplies.', value: '$5', weight: '2 lbs'},
-  {name: 'Camera', category: 'equipment', description: 'Early 20th century camera.', value: '$20', weight: '4 lbs'},
-  {name: 'Lockpicks', category: 'equipment', description: 'Tools for opening locks.', value: '$10', weight: '0.3 lbs'},
-  {name: 'Rope (10m)', category: 'equipment', description: 'Sturdy rope.', value: '$2', weight: '5 lbs'},
-  {name: 'Crowbar', category: 'equipment', description: 'Prying and leverage tool.', value: '$4', weight: '5 lbs'},
-  {
-    name: 'Occult Notes (Folder)',
-    category: 'book',
-    description: 'Handwritten notes on folklore and rites.',
-    value: 'Priceless',
-    weight: '1 lb',
-  },
-]
+  // 10+ items (1920s-ish, CoC-appropriate)
+  const ITEMS: Array<{
+    name: string
+    category: string
+    description: string
+    value: string
+    weight: string
+  }> = [
+    {name: 'Revolver (.38)', category: 'weapon', description: 'Common sidearm.', value: '$25', weight: '2 lbs'},
+    {
+      name: 'Shotgun (12-gauge)',
+      category: 'weapon',
+      description: 'Hunting / self-defense.',
+      value: '$40',
+      weight: '7 lbs',
+    },
+    {name: 'Notebook', category: 'equipment', description: 'Notes, sketches, clues.', value: '$1', weight: '0.5 lbs'},
+    {name: 'Flashlight', category: 'equipment', description: 'Electric flashlight.', value: '$3', weight: '1 lb'},
+    {name: 'First Aid Kit', category: 'equipment', description: 'Bandages and supplies.', value: '$5', weight: '2 lbs'},
+    {name: 'Camera', category: 'equipment', description: 'Early 20th century camera.', value: '$20', weight: '4 lbs'},
+    {
+      name: 'Lockpicks',
+      category: 'equipment',
+      description: 'Tools for opening locks.',
+      value: '$10',
+      weight: '0.3 lbs',
+    },
+    {name: 'Rope (10m)', category: 'equipment', description: 'Sturdy rope.', value: '$2', weight: '5 lbs'},
+    {name: 'Crowbar', category: 'equipment', description: 'Prying and leverage tool.', value: '$4', weight: '5 lbs'},
+    {
+      name: 'Occult Notes (Folder)',
+      category: 'book',
+      description: 'Handwritten notes on folklore and rites.',
+      value: 'Priceless',
+      weight: '1 lb',
+    },
+  ]
 
-// 10 canonical spell names (descriptions kept generic to avoid reproducing book text)
-const SPELLS: Array<{name: string; manaCost: number; castTime: number; range: string}> = [
-  {name: 'Contact Ghoul', manaCost: 3, castTime: 5, range: 'Varies'},
-  {name: 'Contact Deep One', manaCost: 4, castTime: 10, range: 'Varies'},
-  {name: 'Bind Byakhee', manaCost: 10, castTime: 60, range: 'Sight'},
-  {name: 'Elder Sign', manaCost: 5, castTime: 10, range: 'Touch'},
-  {name: 'Shrivelling', manaCost: 8, castTime: 1, range: 'Sight'},
-  {name: 'Flesh Ward', manaCost: 6, castTime: 10, range: 'Touch'},
-  {name: 'Summon Dark Young', manaCost: 15, castTime: 120, range: 'Special'},
-  {name: 'Call/Dismiss Cthonian', manaCost: 20, castTime: 120, range: 'Special'},
-  {name: 'Create Zombie', manaCost: 8, castTime: 60, range: 'Touch'},
-  {name: 'Call Forth the Dead', manaCost: 12, castTime: 60, range: 'Special'},
-]
+  // 10 canonical spell names (descriptions kept generic to avoid reproducing book text)
+  const SPELLS: Array<{name: string; manaCost: number; castTime: number; range: string}> = [
+    {name: 'Contact Ghoul', manaCost: 3, castTime: 5, range: 'Varies'},
+    {name: 'Contact Deep One', manaCost: 4, castTime: 10, range: 'Varies'},
+    {name: 'Bind Byakhee', manaCost: 10, castTime: 60, range: 'Sight'},
+    {name: 'Elder Sign', manaCost: 5, castTime: 10, range: 'Touch'},
+    {name: 'Shrivelling', manaCost: 8, castTime: 1, range: 'Sight'},
+    {name: 'Flesh Ward', manaCost: 6, castTime: 10, range: 'Touch'},
+    {name: 'Summon Dark Young', manaCost: 15, castTime: 120, range: 'Special'},
+    {name: 'Call/Dismiss Cthonian', manaCost: 20, castTime: 120, range: 'Special'},
+    {name: 'Create Zombie', manaCost: 8, castTime: 60, range: 'Touch'},
+    {name: 'Call Forth the Dead', manaCost: 12, castTime: 60, range: 'Special'},
+  ]
 
-// 10 canonical mythos entity names; numeric fields are consistent placeholders (not verbatim stat blocks)
-const MONSTERS: Array<{name: string; sanityLoss: string; description: string}> = [
-  {name: 'Deep One', sanityLoss: '1/1d6', description: 'Amphibious mythos humanoid.'},
-  {name: 'Ghoul', sanityLoss: '0/1d6', description: 'Carrion-eating subterranean creature.'},
-  {name: 'Byakhee', sanityLoss: '1/1d8', description: 'Winged interstellar servant creature.'},
-  {name: 'Dark Young', sanityLoss: '1d6/1d20', description: 'Shub-Niggurath’s monstrous spawn.'},
-  {name: 'Star Spawn of Cthulhu', sanityLoss: '1d6/1d20', description: 'Towering mythos entity.'},
-  {name: 'Cthonian', sanityLoss: '1d6/1d20', description: 'Burrowing titan from deep earth.'},
-  {name: 'Fire Vampire', sanityLoss: '1/1d6', description: 'Invisible burning predator.'},
-  {name: 'Shoggoth', sanityLoss: '1d6/1d20', description: 'Protoplasmic shapechanging mass.'},
-  {name: 'Dimensional Shambler', sanityLoss: '1d3/1d10', description: 'Hunter between dimensions.'},
-  {name: 'Hound of Tindalos', sanityLoss: '1d3/1d10', description: 'Angular time-hunting horror.'},
-]
+  // 10 canonical mythos entity names; numeric fields are consistent placeholders (not verbatim stat blocks)
+  const MONSTERS: Array<{name: string; sanityLoss: string; description: string}> = [
+    {name: 'Deep One', sanityLoss: '1/1d6', description: 'Amphibious mythos humanoid.'},
+    {name: 'Ghoul', sanityLoss: '0/1d6', description: 'Carrion-eating subterranean creature.'},
+    {name: 'Byakhee', sanityLoss: '1/1d8', description: 'Winged interstellar servant creature.'},
+    {name: 'Dark Young', sanityLoss: '1d6/1d20', description: 'Shub-Niggurath’s monstrous spawn.'},
+    {name: 'Star Spawn of Cthulhu', sanityLoss: '1d6/1d20', description: 'Towering mythos entity.'},
+    {name: 'Cthonian', sanityLoss: '1d6/1d20', description: 'Burrowing titan from deep earth.'},
+    {name: 'Fire Vampire', sanityLoss: '1/1d6', description: 'Invisible burning predator.'},
+    {name: 'Shoggoth', sanityLoss: '1d6/1d20', description: 'Protoplasmic shapechanging mass.'},
+    {name: 'Dimensional Shambler', sanityLoss: '1d3/1d10', description: 'Hunter between dimensions.'},
+    {name: 'Hound of Tindalos', sanityLoss: '1d3/1d10', description: 'Angular time-hunting horror.'},
+  ]
 
-// 10 NPCs (all belong to ONE Keeper account)
-const NPCS: Array<{
-  name: string
-  occupation: string
-  age: number
-  sex: string
-  residence: string
-  birthplace: string
-  npcRole: string
-  npcDescription: string
-}> = [
-  {
-    name: 'Professor Albert Wilmarth',
-    occupation: 'Professor',
-    age: 38,
-    sex: 'M',
-    residence: 'Arkham, MA',
-    birthplace: 'Massachusetts',
-    npcRole: 'Academic',
-    npcDescription: 'Miskatonic academic with unsettling correspondence.',
-  },
-  {
-    name: 'Dr. Lillian Harper',
-    occupation: 'Physician',
-    age: 42,
-    sex: 'F',
-    residence: 'Arkham, MA',
-    birthplace: 'New England',
-    npcRole: 'Doctor',
-    npcDescription: 'Experienced doctor; skeptical but practical.',
-  },
-  {
-    name: 'Detective Frank Malone',
-    occupation: 'Police Detective',
-    age: 35,
-    sex: 'M',
-    residence: 'Arkham, MA',
-    birthplace: 'Massachusetts',
-    npcRole: 'Detective',
-    npcDescription: 'Hard-boiled investigator with street contacts.',
-  },
-  {
-    name: 'Agnes Ward',
-    occupation: 'Librarian',
-    age: 29,
-    sex: 'F',
-    residence: 'Arkham, MA',
-    birthplace: 'Massachusetts',
-    npcRole: 'Researcher',
-    npcDescription: 'Quiet librarian who knows what should not be read.',
-  },
-  {
-    name: 'Silas Bishop',
-    occupation: 'Journalist',
-    age: 33,
-    sex: 'M',
-    residence: 'Arkham, MA',
-    birthplace: 'Vermont',
-    npcRole: 'Reporter',
-    npcDescription: 'Chases leads, scandal, and strange rural rumors.',
-  },
-  {
-    name: 'Eleanor Finch',
-    occupation: 'Antiquarian',
-    age: 46,
-    sex: 'F',
-    residence: 'Boston, MA',
-    birthplace: 'Massachusetts',
-    npcRole: 'Antiquarian',
-    npcDescription: 'Dealer in artifacts with too many private buyers.',
-  },
-  {
-    name: 'Thomas Keane',
-    occupation: 'Private Investigator',
-    age: 40,
-    sex: 'M',
-    residence: 'Arkham, MA',
-    birthplace: 'New York',
-    npcRole: 'PI',
-    npcDescription: 'Takes cases others refuse; keeps a low profile.',
-  },
-  {
-    name: 'Martha Caldwell',
-    occupation: 'Occultist',
-    age: 51,
-    sex: 'F',
-    residence: 'Providence, RI',
-    birthplace: 'Rhode Island',
-    npcRole: 'Occultist',
-    npcDescription: 'Knows folklore, rites, and the cost of knowledge.',
-  },
-  {
-    name: 'Harold Price',
-    occupation: 'Engineer',
-    age: 37,
-    sex: 'M',
-    residence: 'Arkham, MA',
-    birthplace: 'Massachusetts',
-    npcRole: 'Engineer',
-    npcDescription: 'Fixes machines; sometimes finds impossible designs.',
-  },
-  {
-    name: 'Ruth Sullivan',
-    occupation: 'Nurse',
-    age: 31,
-    sex: 'F',
-    residence: 'Arkham, MA',
-    birthplace: 'Massachusetts',
-    npcRole: 'Medic',
-    npcDescription: 'Calm in emergencies; sees what fear does to people.',
-  },
-]
+  // 10 NPCs (all belong to ONE Keeper account)
+  const NPCS: Array<{
+    name: string
+    occupation: string
+    age: number
+    sex: string
+    residence: string
+    birthplace: string
+    npcRole: string
+    npcDescription: string
+  }> = [
+    {
+      name: 'Professor Albert Wilmarth',
+      occupation: 'Professor',
+      age: 38,
+      sex: 'M',
+      residence: 'Arkham, MA',
+      birthplace: 'Massachusetts',
+      npcRole: 'Academic',
+      npcDescription: 'Miskatonic academic with unsettling correspondence.',
+    },
+    {
+      name: 'Dr. Lillian Harper',
+      occupation: 'Physician',
+      age: 42,
+      sex: 'F',
+      residence: 'Arkham, MA',
+      birthplace: 'New England',
+      npcRole: 'Doctor',
+      npcDescription: 'Experienced doctor; skeptical but practical.',
+    },
+    {
+      name: 'Detective Frank Malone',
+      occupation: 'Police Detective',
+      age: 35,
+      sex: 'M',
+      residence: 'Arkham, MA',
+      birthplace: 'Massachusetts',
+      npcRole: 'Detective',
+      npcDescription: 'Hard-boiled investigator with street contacts.',
+    },
+    {
+      name: 'Agnes Ward',
+      occupation: 'Librarian',
+      age: 29,
+      sex: 'F',
+      residence: 'Arkham, MA',
+      birthplace: 'Massachusetts',
+      npcRole: 'Researcher',
+      npcDescription: 'Quiet librarian who knows what should not be read.',
+    },
+    {
+      name: 'Silas Bishop',
+      occupation: 'Journalist',
+      age: 33,
+      sex: 'M',
+      residence: 'Arkham, MA',
+      birthplace: 'Vermont',
+      npcRole: 'Reporter',
+      npcDescription: 'Chases leads, scandal, and strange rural rumors.',
+    },
+    {
+      name: 'Eleanor Finch',
+      occupation: 'Antiquarian',
+      age: 46,
+      sex: 'F',
+      residence: 'Boston, MA',
+      birthplace: 'Massachusetts',
+      npcRole: 'Antiquarian',
+      npcDescription: 'Dealer in artifacts with too many private buyers.',
+    },
+    {
+      name: 'Thomas Keane',
+      occupation: 'Private Investigator',
+      age: 40,
+      sex: 'M',
+      residence: 'Arkham, MA',
+      birthplace: 'New York',
+      npcRole: 'PI',
+      npcDescription: 'Takes cases others refuse; keeps a low profile.',
+    },
+    {
+      name: 'Martha Caldwell',
+      occupation: 'Occultist',
+      age: 51,
+      sex: 'F',
+      residence: 'Providence, RI',
+      birthplace: 'Rhode Island',
+      npcRole: 'Occultist',
+      npcDescription: 'Knows folklore, rites, and the cost of knowledge.',
+    },
+    {
+      name: 'Harold Price',
+      occupation: 'Engineer',
+      age: 37,
+      sex: 'M',
+      residence: 'Arkham, MA',
+      birthplace: 'Massachusetts',
+      npcRole: 'Engineer',
+      npcDescription: 'Fixes machines; sometimes finds impossible designs.',
+    },
+    {
+      name: 'Ruth Sullivan',
+      occupation: 'Nurse',
+      age: 31,
+      sex: 'F',
+      residence: 'Arkham, MA',
+      birthplace: 'Massachusetts',
+      npcRole: 'Medic',
+      npcDescription: 'Calm in emergencies; sees what fear does to people.',
+    },
+  ]
 
-function pickOutcomeFromTarget(result: number, target: number) {
-  // Simple deterministic outcomes for seed data
-  if (result === 1) return 'critical'
-  if (result >= 96) return 'fumble'
-  if (result <= Math.floor(target / 5)) return 'extreme'
-  if (result <= Math.floor(target / 2)) return 'hard'
-  return result <= target ? 'success' : 'failure'
-}
+  function pickOutcomeFromTarget(result: number, target: number) {
+    // Simple deterministic outcomes for seed data
+    if (result === 1) return 'critical'
+    if (result >= 96) return 'fumble'
+    if (result <= Math.floor(target / 5)) return 'extreme'
+    if (result <= Math.floor(target / 2)) return 'hard'
+    return result <= target ? 'success' : 'failure'
+  }
 
-async function clearDatabase() {
-  // Order matters due to FK constraints
-  await prisma.rollHistory.deleteMany()
-  await prisma.clue.deleteMany()
-  await prisma.location.deleteMany()
-  await prisma.investigationSession.deleteMany()
+  async function clearDatabase() {
+    // Order matters due to FK constraints
+    await prisma.rollHistory.deleteMany()
+    await prisma.clue.deleteMany()
+    await prisma.location.deleteMany()
+    await prisma.investigationSession.deleteMany()
 
-  await prisma.characterSkill.deleteMany()
-  await prisma.characterPossession.deleteMany()
-  await prisma.characterContact.deleteMany()
+    await prisma.characterSkill.deleteMany()
+    await prisma.characterPossession.deleteMany()
+    await prisma.characterContact.deleteMany()
 
-  // many-to-many join tables are implicit; Prisma handles via disconnect on deleteMany
-  await prisma.monster.deleteMany()
-  await prisma.spell.deleteMany()
-  await prisma.item.deleteMany()
-  await prisma.skill.deleteMany()
+    // many-to-many join tables are implicit; Prisma handles via disconnect on deleteMany
+    await prisma.monster.deleteMany()
+    await prisma.spell.deleteMany()
+    await prisma.item.deleteMany()
+    await prisma.skill.deleteMany()
 
-  await prisma.characterDerivedStats.deleteMany()
-  await prisma.characterCharacteristics.deleteMany()
-  await prisma.character.deleteMany()
+    await prisma.characterDerivedStats.deleteMany()
+    await prisma.characterCharacteristics.deleteMany()
+    await prisma.character.deleteMany()
 
-  await prisma.campaign.deleteMany()
-  await prisma.session.deleteMany()
-  await prisma.user.deleteMany()
-}
+    await prisma.campaign.deleteMany()
+    await prisma.session.deleteMany()
+    await prisma.user.deleteMany()
+  }
   await clearDatabase()
-   /* source of skills and other items */
+  /* source of skills and other items */
   /* https://cthulhuwiki.chaosium.com */
 
   /* ================= USERS (3 roles) ================= */
 
   const admin = await prisma.user.create({
-    data: {email: 'admin@arkham.edu', username: 'admin', password: 'password123', role: Role.Admin},
+    data: {email: 'admin@arkham.edu', username: 'admin', password: hashPassword('password123'), role: Role.Admin},
   })
 
   const keeper = await prisma.user.create({
-    data: {email: 'keeper@arkham.edu', username: 'keeper', password: 'password123', role: Role.Keeper},
+    data: {email: 'keeper@arkham.edu', username: 'keeper', password: hashPassword('password123'), role: Role.Keeper},
   })
 
   const user = await prisma.user.create({
-    data: {email: 'user@arkham.edu', username: 'user', password: 'password123', role: Role.User},
+    data: {email: 'user@arkham.edu', username: 'user', password: hashPassword('password123'), role: Role.User},
   })
 
   /* ================= SESSION (allowed exception: 1 is fine) ================= */

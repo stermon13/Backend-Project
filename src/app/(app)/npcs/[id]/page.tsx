@@ -1,6 +1,6 @@
 "use client"
 import { useParams, useRouter } from "next/navigation"
-import {CampaignNav} from '@/components/custom/campaign-nav'
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -131,8 +131,7 @@ export default function NPCDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <CampaignNav />
-      <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <Button variant="ghost" className="mb-4 gap-2" onClick={() => router.back()}>
