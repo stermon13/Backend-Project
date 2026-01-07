@@ -4,10 +4,15 @@ import {CharacterDetail} from '@/components/custom/character/characterDetail'
 
 export const dynamic = 'force-dynamic'
 
-export default async function CharacterDetailPage({params}: {params: Promise<{id?: string}>}) {
+export default async function EditCharacterPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{id?: string}>
+  searchParams?: Promise<{from?: string}>
+}) {
   const {id} = await params
-
-  console.log('Character ID param:', id)
+  const {from} = (await searchParams) ?? {}
 
   if (!id) {
     notFound()
@@ -21,5 +26,8 @@ export default async function CharacterDetailPage({params}: {params: Promise<{id
     notFound()
   }
 
-  return <CharacterDetail character={character} items={items} mode="view" backHref="/characters" />
+  const backHref = from === 'detail' ? `/characters/${id}` : '/characters'
+
+  return <CharacterDetail character={character} items={items} mode="edit" backHref={backHref} />
 }
+

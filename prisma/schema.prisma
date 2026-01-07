@@ -12,7 +12,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -71,6 +70,9 @@ model Character {
   traits               String?
   injuriesScars        String?
   phobiasManias        String?
+  cash                 String?
+  assets               String?
+  notes                String?
 
   createdAt                          DateTime               @default(now())
   updatedAt                          DateTime               @updatedAt
@@ -82,8 +84,7 @@ model Character {
 }
 
 model CharacterCharacteristics {
-  id String @id @default(uuid()) @db.Uuid
-
+  id           String    @id @default(uuid()) @db.Uuid
   strength     Int
   constitution Int
   size         Int
@@ -92,9 +93,8 @@ model CharacterCharacteristics {
   intelligence Int
   power        Int
   education    Int
-
-  characterId String    @unique @db.Uuid
-  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  characterId  String    @unique @db.Uuid
+  character    Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
 }
 
 model CharacterDerivedStats {
@@ -104,6 +104,7 @@ model CharacterDerivedStats {
   sanityCurrent      Int
   sanityMax          Int
   magicPointsCurrent Int
+  magicPointsMax     Int
   luck               Int
   movement           Int
   build              Int
@@ -132,7 +133,7 @@ model CharacterSkill {
 model Skill {
   id          String  @id @default(uuid()) @db.Uuid
   name        String
-  category    String // e.g., Fighting, Firearms, Social, etc.
+  category    String
   description String?
 
   characters CharacterSkill[]
@@ -143,12 +144,16 @@ model Skill {
 }
 
 model Item {
-  id          String @id @default(uuid()) @db.Uuid
+  id          String  @id @default(uuid()) @db.Uuid
   name        String
-  category    String // "weapon", "equipment", "book", "artifact", "consumable", "other"
+  category    String
   description String
-  value       String // Value of the item, e.g., "$25", "Priceless"
-  weight      String // Weight of the item, e.g., "2 lbs", "0.5 kg"
+  value       String
+  weight      String
+  damage      String?
+  range       String?
+  attacks     Int?
+  ammo        Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

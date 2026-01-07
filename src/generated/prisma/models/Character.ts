@@ -56,6 +56,9 @@ export type CharacterMinAggregateOutputType = {
   traits: string | null
   injuriesScars: string | null
   phobiasManias: string | null
+  cash: string | null
+  assets: string | null
+  notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -82,6 +85,9 @@ export type CharacterMaxAggregateOutputType = {
   traits: string | null
   injuriesScars: string | null
   phobiasManias: string | null
+  cash: string | null
+  assets: string | null
+  notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -108,6 +114,9 @@ export type CharacterCountAggregateOutputType = {
   traits: number
   injuriesScars: number
   phobiasManias: number
+  cash: number
+  assets: number
+  notes: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -144,6 +153,9 @@ export type CharacterMinAggregateInputType = {
   traits?: true
   injuriesScars?: true
   phobiasManias?: true
+  cash?: true
+  assets?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -170,6 +182,9 @@ export type CharacterMaxAggregateInputType = {
   traits?: true
   injuriesScars?: true
   phobiasManias?: true
+  cash?: true
+  assets?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -196,6 +211,9 @@ export type CharacterCountAggregateInputType = {
   traits?: true
   injuriesScars?: true
   phobiasManias?: true
+  cash?: true
+  assets?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -309,6 +327,9 @@ export type CharacterGroupByOutputType = {
   traits: string | null
   injuriesScars: string | null
   phobiasManias: string | null
+  cash: string | null
+  assets: string | null
+  notes: string | null
   createdAt: Date
   updatedAt: Date
   _count: CharacterCountAggregateOutputType | null
@@ -358,6 +379,9 @@ export type CharacterWhereInput = {
   traits?: Prisma.StringNullableFilter<"Character"> | string | null
   injuriesScars?: Prisma.StringNullableFilter<"Character"> | string | null
   phobiasManias?: Prisma.StringNullableFilter<"Character"> | string | null
+  cash?: Prisma.StringNullableFilter<"Character"> | string | null
+  assets?: Prisma.StringNullableFilter<"Character"> | string | null
+  notes?: Prisma.StringNullableFilter<"Character"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -395,6 +419,9 @@ export type CharacterOrderByWithRelationInput = {
   traits?: Prisma.SortOrderInput | Prisma.SortOrder
   injuriesScars?: Prisma.SortOrderInput | Prisma.SortOrder
   phobiasManias?: Prisma.SortOrderInput | Prisma.SortOrder
+  cash?: Prisma.SortOrderInput | Prisma.SortOrder
+  assets?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -435,6 +462,9 @@ export type CharacterWhereUniqueInput = Prisma.AtLeast<{
   traits?: Prisma.StringNullableFilter<"Character"> | string | null
   injuriesScars?: Prisma.StringNullableFilter<"Character"> | string | null
   phobiasManias?: Prisma.StringNullableFilter<"Character"> | string | null
+  cash?: Prisma.StringNullableFilter<"Character"> | string | null
+  assets?: Prisma.StringNullableFilter<"Character"> | string | null
+  notes?: Prisma.StringNullableFilter<"Character"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -472,6 +502,9 @@ export type CharacterOrderByWithAggregationInput = {
   traits?: Prisma.SortOrderInput | Prisma.SortOrder
   injuriesScars?: Prisma.SortOrderInput | Prisma.SortOrder
   phobiasManias?: Prisma.SortOrderInput | Prisma.SortOrder
+  cash?: Prisma.SortOrderInput | Prisma.SortOrder
+  assets?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CharacterCountOrderByAggregateInput
@@ -506,6 +539,9 @@ export type CharacterScalarWhereWithAggregatesInput = {
   traits?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   injuriesScars?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   phobiasManias?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  cash?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  assets?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  notes?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Character"> | Date | string
 }
@@ -531,6 +567,9 @@ export type CharacterCreateInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -568,6 +607,9 @@ export type CharacterUncheckedCreateInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -603,6 +645,9 @@ export type CharacterUpdateInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -640,6 +685,9 @@ export type CharacterUncheckedUpdateInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -676,6 +724,9 @@ export type CharacterCreateManyInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -701,6 +752,9 @@ export type CharacterUpdateManyMutationInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -727,6 +781,9 @@ export type CharacterUncheckedUpdateManyInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -763,6 +820,9 @@ export type CharacterCountOrderByAggregateInput = {
   traits?: Prisma.SortOrder
   injuriesScars?: Prisma.SortOrder
   phobiasManias?: Prisma.SortOrder
+  cash?: Prisma.SortOrder
+  assets?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -793,6 +853,9 @@ export type CharacterMaxOrderByAggregateInput = {
   traits?: Prisma.SortOrder
   injuriesScars?: Prisma.SortOrder
   phobiasManias?: Prisma.SortOrder
+  cash?: Prisma.SortOrder
+  assets?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -819,6 +882,9 @@ export type CharacterMinOrderByAggregateInput = {
   traits?: Prisma.SortOrder
   injuriesScars?: Prisma.SortOrder
   phobiasManias?: Prisma.SortOrder
+  cash?: Prisma.SortOrder
+  assets?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1147,6 +1213,9 @@ export type CharacterCreateWithoutUserInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsCreateNestedOneWithoutCharacterInput
@@ -1182,6 +1251,9 @@ export type CharacterUncheckedCreateWithoutUserInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -1247,6 +1319,9 @@ export type CharacterScalarWhereInput = {
   traits?: Prisma.StringNullableFilter<"Character"> | string | null
   injuriesScars?: Prisma.StringNullableFilter<"Character"> | string | null
   phobiasManias?: Prisma.StringNullableFilter<"Character"> | string | null
+  cash?: Prisma.StringNullableFilter<"Character"> | string | null
+  assets?: Prisma.StringNullableFilter<"Character"> | string | null
+  notes?: Prisma.StringNullableFilter<"Character"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
 }
@@ -1272,6 +1347,9 @@ export type CharacterCreateWithoutCharacteristicsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -1308,6 +1386,9 @@ export type CharacterUncheckedCreateWithoutCharacteristicsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   derivedStats?: Prisma.CharacterDerivedStatsUncheckedCreateNestedOneWithoutCharacterInput
@@ -1358,6 +1439,9 @@ export type CharacterUpdateWithoutCharacteristicsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -1394,6 +1478,9 @@ export type CharacterUncheckedUpdateWithoutCharacteristicsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   derivedStats?: Prisma.CharacterDerivedStatsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -1428,6 +1515,9 @@ export type CharacterCreateWithoutDerivedStatsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -1464,6 +1554,9 @@ export type CharacterUncheckedCreateWithoutDerivedStatsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -1514,6 +1607,9 @@ export type CharacterUpdateWithoutDerivedStatsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -1550,6 +1646,9 @@ export type CharacterUncheckedUpdateWithoutDerivedStatsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -1584,6 +1683,9 @@ export type CharacterCreateWithoutSkillsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -1620,6 +1722,9 @@ export type CharacterUncheckedCreateWithoutSkillsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -1670,6 +1775,9 @@ export type CharacterUpdateWithoutSkillsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -1706,6 +1814,9 @@ export type CharacterUncheckedUpdateWithoutSkillsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -1740,6 +1851,9 @@ export type CharacterCreateWithoutPossessionsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -1776,6 +1890,9 @@ export type CharacterUncheckedCreateWithoutPossessionsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -1826,6 +1943,9 @@ export type CharacterUpdateWithoutPossessionsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -1862,6 +1982,9 @@ export type CharacterUncheckedUpdateWithoutPossessionsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -1896,6 +2019,9 @@ export type CharacterCreateWithoutContactsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -1932,6 +2058,9 @@ export type CharacterUncheckedCreateWithoutContactsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -1982,6 +2111,9 @@ export type CharacterUpdateWithoutContactsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -2018,6 +2150,9 @@ export type CharacterUncheckedUpdateWithoutContactsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -2052,6 +2187,9 @@ export type CharacterCreateWithoutSpellInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -2088,6 +2226,9 @@ export type CharacterUncheckedCreateWithoutSpellInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -2143,6 +2284,9 @@ export type CharacterCreateWithoutInvestigationSessionsAsNpcInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -2179,6 +2323,9 @@ export type CharacterUncheckedCreateWithoutInvestigationSessionsAsNpcInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -2218,6 +2365,9 @@ export type CharacterCreateWithoutInvestigationSessionsAsParticipantInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -2254,6 +2404,9 @@ export type CharacterUncheckedCreateWithoutInvestigationSessionsAsParticipantInp
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -2325,6 +2478,9 @@ export type CharacterCreateWithoutCampaignsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -2361,6 +2517,9 @@ export type CharacterUncheckedCreateWithoutCampaignsInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -2416,6 +2575,9 @@ export type CharacterCreateWithoutRollHistoryInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCharacterInput
@@ -2452,6 +2614,9 @@ export type CharacterUncheckedCreateWithoutRollHistoryInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedCreateNestedOneWithoutCharacterInput
@@ -2502,6 +2667,9 @@ export type CharacterUpdateWithoutRollHistoryInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -2538,6 +2706,9 @@ export type CharacterUncheckedUpdateWithoutRollHistoryInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -2572,6 +2743,9 @@ export type CharacterCreateManyUserInput = {
   traits?: string | null
   injuriesScars?: string | null
   phobiasManias?: string | null
+  cash?: string | null
+  assets?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2597,6 +2771,9 @@ export type CharacterUpdateWithoutUserInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUpdateOneWithoutCharacterNestedInput
@@ -2632,6 +2809,9 @@ export type CharacterUncheckedUpdateWithoutUserInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -2667,6 +2847,9 @@ export type CharacterUncheckedUpdateManyWithoutUserInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2692,6 +2875,9 @@ export type CharacterUpdateWithoutSpellInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -2728,6 +2914,9 @@ export type CharacterUncheckedUpdateWithoutSpellInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -2763,6 +2952,9 @@ export type CharacterUncheckedUpdateManyWithoutSpellInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2788,6 +2980,9 @@ export type CharacterUpdateWithoutInvestigationSessionsAsNpcInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -2824,6 +3019,9 @@ export type CharacterUncheckedUpdateWithoutInvestigationSessionsAsNpcInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -2859,6 +3057,9 @@ export type CharacterUncheckedUpdateManyWithoutInvestigationSessionsAsNpcInput =
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2884,6 +3085,9 @@ export type CharacterUpdateWithoutInvestigationSessionsAsParticipantInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -2920,6 +3124,9 @@ export type CharacterUncheckedUpdateWithoutInvestigationSessionsAsParticipantInp
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -2955,6 +3162,9 @@ export type CharacterUncheckedUpdateManyWithoutInvestigationSessionsAsParticipan
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2980,6 +3190,9 @@ export type CharacterUpdateWithoutCampaignsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterNestedInput
@@ -3016,6 +3229,9 @@ export type CharacterUncheckedUpdateWithoutCampaignsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characteristics?: Prisma.CharacterCharacteristicsUncheckedUpdateOneWithoutCharacterNestedInput
@@ -3051,6 +3267,9 @@ export type CharacterUncheckedUpdateManyWithoutCampaignsInput = {
   traits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   injuriesScars?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phobiasManias?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assets?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -3171,6 +3390,9 @@ export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   traits?: boolean
   injuriesScars?: boolean
   phobiasManias?: boolean
+  cash?: boolean
+  assets?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -3209,6 +3431,9 @@ export type CharacterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   traits?: boolean
   injuriesScars?: boolean
   phobiasManias?: boolean
+  cash?: boolean
+  assets?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -3236,6 +3461,9 @@ export type CharacterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   traits?: boolean
   injuriesScars?: boolean
   phobiasManias?: boolean
+  cash?: boolean
+  assets?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -3263,11 +3491,14 @@ export type CharacterSelectScalar = {
   traits?: boolean
   injuriesScars?: boolean
   phobiasManias?: boolean
+  cash?: boolean
+  assets?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "occupation" | "age" | "sex" | "residence" | "birthplace" | "portraitUrl" | "campaignName" | "isNpc" | "npcRole" | "npcDescription" | "userId" | "backstory" | "ideologyBeliefs" | "significantPeople" | "meaningfulLocations" | "treasuredPossessions" | "traits" | "injuriesScars" | "phobiasManias" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
+export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "occupation" | "age" | "sex" | "residence" | "birthplace" | "portraitUrl" | "campaignName" | "isNpc" | "npcRole" | "npcDescription" | "userId" | "backstory" | "ideologyBeliefs" | "significantPeople" | "meaningfulLocations" | "treasuredPossessions" | "traits" | "injuriesScars" | "phobiasManias" | "cash" | "assets" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
 export type CharacterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   characteristics?: boolean | Prisma.Character$characteristicsArgs<ExtArgs>
@@ -3326,6 +3557,9 @@ export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     traits: string | null
     injuriesScars: string | null
     phobiasManias: string | null
+    cash: string | null
+    assets: string | null
+    notes: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["character"]>
@@ -3783,6 +4017,9 @@ export interface CharacterFieldRefs {
   readonly traits: Prisma.FieldRef<"Character", 'String'>
   readonly injuriesScars: Prisma.FieldRef<"Character", 'String'>
   readonly phobiasManias: Prisma.FieldRef<"Character", 'String'>
+  readonly cash: Prisma.FieldRef<"Character", 'String'>
+  readonly assets: Prisma.FieldRef<"Character", 'String'>
+  readonly notes: Prisma.FieldRef<"Character", 'String'>
   readonly createdAt: Prisma.FieldRef<"Character", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Character", 'DateTime'>
 }

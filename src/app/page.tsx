@@ -1,7 +1,6 @@
 'use client'
 
 import {useState, useActionState} from 'react'
-import Link from 'next/link'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
@@ -49,13 +48,7 @@ export default function AuthPage() {
                 <form action={loginFormAction} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="login-email">Email</Label>
-                    <Input
-                      id="login-email"
-                      name="email"
-                      type="email"
-                      placeholder="investigator@arkham.com"
-                      required
-                    />
+                    <Input id="login-email" name="email" type="email" placeholder="investigator@arkham.com" required />
                   </div>
 
                   <div className="space-y-2">
@@ -74,8 +67,7 @@ export default function AuthPage() {
                         variant="ghost"
                         size="icon"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
+                        onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
                     </div>
@@ -119,8 +111,7 @@ export default function AuthPage() {
                         variant="ghost"
                         size="icon"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
+                        onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
                     </div>
@@ -141,17 +132,14 @@ export default function AuthPage() {
                         variant="ghost"
                         size="icon"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      >
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                         {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
                     </div>
                   </div>
 
                   {registerState.errors?.passwordConfirmation?.[0] && (
-                    <p className="text-sm text-destructive">
-                      {registerState.errors.passwordConfirmation[0]}
-                    </p>
+                    <p className="text-sm text-destructive">{registerState.errors.passwordConfirmation[0]}</p>
                   )}
 
                   <Button type="submit" className="w-full">

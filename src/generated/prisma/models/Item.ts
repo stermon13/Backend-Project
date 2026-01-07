@@ -20,8 +20,20 @@ export type ItemModel = runtime.Types.Result.DefaultSelection<Prisma.$ItemPayloa
 
 export type AggregateItem = {
   _count: ItemCountAggregateOutputType | null
+  _avg: ItemAvgAggregateOutputType | null
+  _sum: ItemSumAggregateOutputType | null
   _min: ItemMinAggregateOutputType | null
   _max: ItemMaxAggregateOutputType | null
+}
+
+export type ItemAvgAggregateOutputType = {
+  attacks: number | null
+  ammo: number | null
+}
+
+export type ItemSumAggregateOutputType = {
+  attacks: number | null
+  ammo: number | null
 }
 
 export type ItemMinAggregateOutputType = {
@@ -31,6 +43,10 @@ export type ItemMinAggregateOutputType = {
   description: string | null
   value: string | null
   weight: string | null
+  damage: string | null
+  range: string | null
+  attacks: number | null
+  ammo: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +58,10 @@ export type ItemMaxAggregateOutputType = {
   description: string | null
   value: string | null
   weight: string | null
+  damage: string | null
+  range: string | null
+  attacks: number | null
+  ammo: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,11 +73,25 @@ export type ItemCountAggregateOutputType = {
   description: number
   value: number
   weight: number
+  damage: number
+  range: number
+  attacks: number
+  ammo: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type ItemAvgAggregateInputType = {
+  attacks?: true
+  ammo?: true
+}
+
+export type ItemSumAggregateInputType = {
+  attacks?: true
+  ammo?: true
+}
 
 export type ItemMinAggregateInputType = {
   id?: true
@@ -66,6 +100,10 @@ export type ItemMinAggregateInputType = {
   description?: true
   value?: true
   weight?: true
+  damage?: true
+  range?: true
+  attacks?: true
+  ammo?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +115,10 @@ export type ItemMaxAggregateInputType = {
   description?: true
   value?: true
   weight?: true
+  damage?: true
+  range?: true
+  attacks?: true
+  ammo?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +130,10 @@ export type ItemCountAggregateInputType = {
   description?: true
   value?: true
   weight?: true
+  damage?: true
+  range?: true
+  attacks?: true
+  ammo?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -131,6 +177,18 @@ export type ItemAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ItemAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ItemSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ItemMinAggregateInputType
@@ -161,6 +219,8 @@ export type ItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: ItemCountAggregateInputType | true
+  _avg?: ItemAvgAggregateInputType
+  _sum?: ItemSumAggregateInputType
   _min?: ItemMinAggregateInputType
   _max?: ItemMaxAggregateInputType
 }
@@ -172,9 +232,15 @@ export type ItemGroupByOutputType = {
   description: string
   value: string
   weight: string
+  damage: string | null
+  range: string | null
+  attacks: number | null
+  ammo: number | null
   createdAt: Date
   updatedAt: Date
   _count: ItemCountAggregateOutputType | null
+  _avg: ItemAvgAggregateOutputType | null
+  _sum: ItemSumAggregateOutputType | null
   _min: ItemMinAggregateOutputType | null
   _max: ItemMaxAggregateOutputType | null
 }
@@ -204,6 +270,10 @@ export type ItemWhereInput = {
   description?: Prisma.StringFilter<"Item"> | string
   value?: Prisma.StringFilter<"Item"> | string
   weight?: Prisma.StringFilter<"Item"> | string
+  damage?: Prisma.StringNullableFilter<"Item"> | string | null
+  range?: Prisma.StringNullableFilter<"Item"> | string | null
+  attacks?: Prisma.IntNullableFilter<"Item"> | number | null
+  ammo?: Prisma.IntNullableFilter<"Item"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   possessions?: Prisma.CharacterPossessionListRelationFilter
@@ -216,6 +286,10 @@ export type ItemOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   value?: Prisma.SortOrder
   weight?: Prisma.SortOrder
+  damage?: Prisma.SortOrderInput | Prisma.SortOrder
+  range?: Prisma.SortOrderInput | Prisma.SortOrder
+  attacks?: Prisma.SortOrderInput | Prisma.SortOrder
+  ammo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   possessions?: Prisma.CharacterPossessionOrderByRelationAggregateInput
@@ -231,6 +305,10 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Item"> | string
   value?: Prisma.StringFilter<"Item"> | string
   weight?: Prisma.StringFilter<"Item"> | string
+  damage?: Prisma.StringNullableFilter<"Item"> | string | null
+  range?: Prisma.StringNullableFilter<"Item"> | string | null
+  attacks?: Prisma.IntNullableFilter<"Item"> | number | null
+  ammo?: Prisma.IntNullableFilter<"Item"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   possessions?: Prisma.CharacterPossessionListRelationFilter
@@ -243,11 +321,17 @@ export type ItemOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   value?: Prisma.SortOrder
   weight?: Prisma.SortOrder
+  damage?: Prisma.SortOrderInput | Prisma.SortOrder
+  range?: Prisma.SortOrderInput | Prisma.SortOrder
+  attacks?: Prisma.SortOrderInput | Prisma.SortOrder
+  ammo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ItemCountOrderByAggregateInput
+  _avg?: Prisma.ItemAvgOrderByAggregateInput
   _max?: Prisma.ItemMaxOrderByAggregateInput
   _min?: Prisma.ItemMinOrderByAggregateInput
+  _sum?: Prisma.ItemSumOrderByAggregateInput
 }
 
 export type ItemScalarWhereWithAggregatesInput = {
@@ -260,6 +344,10 @@ export type ItemScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Item"> | string
   value?: Prisma.StringWithAggregatesFilter<"Item"> | string
   weight?: Prisma.StringWithAggregatesFilter<"Item"> | string
+  damage?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
+  range?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
+  attacks?: Prisma.IntNullableWithAggregatesFilter<"Item"> | number | null
+  ammo?: Prisma.IntNullableWithAggregatesFilter<"Item"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
 }
@@ -271,6 +359,10 @@ export type ItemCreateInput = {
   description: string
   value: string
   weight: string
+  damage?: string | null
+  range?: string | null
+  attacks?: number | null
+  ammo?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   possessions?: Prisma.CharacterPossessionCreateNestedManyWithoutItemInput
@@ -283,6 +375,10 @@ export type ItemUncheckedCreateInput = {
   description: string
   value: string
   weight: string
+  damage?: string | null
+  range?: string | null
+  attacks?: number | null
+  ammo?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   possessions?: Prisma.CharacterPossessionUncheckedCreateNestedManyWithoutItemInput
@@ -295,6 +391,10 @@ export type ItemUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   weight?: Prisma.StringFieldUpdateOperationsInput | string
+  damage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  range?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attacks?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ammo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   possessions?: Prisma.CharacterPossessionUpdateManyWithoutItemNestedInput
@@ -307,6 +407,10 @@ export type ItemUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   weight?: Prisma.StringFieldUpdateOperationsInput | string
+  damage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  range?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attacks?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ammo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   possessions?: Prisma.CharacterPossessionUncheckedUpdateManyWithoutItemNestedInput
@@ -319,6 +423,10 @@ export type ItemCreateManyInput = {
   description: string
   value: string
   weight: string
+  damage?: string | null
+  range?: string | null
+  attacks?: number | null
+  ammo?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -330,6 +438,10 @@ export type ItemUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   weight?: Prisma.StringFieldUpdateOperationsInput | string
+  damage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  range?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attacks?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ammo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -341,6 +453,10 @@ export type ItemUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   weight?: Prisma.StringFieldUpdateOperationsInput | string
+  damage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  range?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attacks?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ammo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -352,8 +468,17 @@ export type ItemCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   value?: Prisma.SortOrder
   weight?: Prisma.SortOrder
+  damage?: Prisma.SortOrder
+  range?: Prisma.SortOrder
+  attacks?: Prisma.SortOrder
+  ammo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ItemAvgOrderByAggregateInput = {
+  attacks?: Prisma.SortOrder
+  ammo?: Prisma.SortOrder
 }
 
 export type ItemMaxOrderByAggregateInput = {
@@ -363,6 +488,10 @@ export type ItemMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   value?: Prisma.SortOrder
   weight?: Prisma.SortOrder
+  damage?: Prisma.SortOrder
+  range?: Prisma.SortOrder
+  attacks?: Prisma.SortOrder
+  ammo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -374,13 +503,30 @@ export type ItemMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   value?: Prisma.SortOrder
   weight?: Prisma.SortOrder
+  damage?: Prisma.SortOrder
+  range?: Prisma.SortOrder
+  attacks?: Prisma.SortOrder
+  ammo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ItemSumOrderByAggregateInput = {
+  attacks?: Prisma.SortOrder
+  ammo?: Prisma.SortOrder
 }
 
 export type ItemScalarRelationFilter = {
   is?: Prisma.ItemWhereInput
   isNot?: Prisma.ItemWhereInput
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type ItemCreateNestedOneWithoutPossessionsInput = {
@@ -404,6 +550,10 @@ export type ItemCreateWithoutPossessionsInput = {
   description: string
   value: string
   weight: string
+  damage?: string | null
+  range?: string | null
+  attacks?: number | null
+  ammo?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -415,6 +565,10 @@ export type ItemUncheckedCreateWithoutPossessionsInput = {
   description: string
   value: string
   weight: string
+  damage?: string | null
+  range?: string | null
+  attacks?: number | null
+  ammo?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -442,6 +596,10 @@ export type ItemUpdateWithoutPossessionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   weight?: Prisma.StringFieldUpdateOperationsInput | string
+  damage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  range?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attacks?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ammo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -453,6 +611,10 @@ export type ItemUncheckedUpdateWithoutPossessionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   weight?: Prisma.StringFieldUpdateOperationsInput | string
+  damage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  range?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attacks?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ammo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -495,6 +657,10 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   description?: boolean
   value?: boolean
   weight?: boolean
+  damage?: boolean
+  range?: boolean
+  attacks?: boolean
+  ammo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   possessions?: boolean | Prisma.Item$possessionsArgs<ExtArgs>
@@ -508,6 +674,10 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   description?: boolean
   value?: boolean
   weight?: boolean
+  damage?: boolean
+  range?: boolean
+  attacks?: boolean
+  ammo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["item"]>
@@ -519,6 +689,10 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   description?: boolean
   value?: boolean
   weight?: boolean
+  damage?: boolean
+  range?: boolean
+  attacks?: boolean
+  ammo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["item"]>
@@ -530,11 +704,15 @@ export type ItemSelectScalar = {
   description?: boolean
   value?: boolean
   weight?: boolean
+  damage?: boolean
+  range?: boolean
+  attacks?: boolean
+  ammo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "description" | "value" | "weight" | "createdAt" | "updatedAt", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "description" | "value" | "weight" | "damage" | "range" | "attacks" | "ammo" | "createdAt" | "updatedAt", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   possessions?: boolean | Prisma.Item$possessionsArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
@@ -554,6 +732,10 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     description: string
     value: string
     weight: string
+    damage: string | null
+    range: string | null
+    attacks: number | null
+    ammo: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["item"]>
@@ -986,6 +1168,10 @@ export interface ItemFieldRefs {
   readonly description: Prisma.FieldRef<"Item", 'String'>
   readonly value: Prisma.FieldRef<"Item", 'String'>
   readonly weight: Prisma.FieldRef<"Item", 'String'>
+  readonly damage: Prisma.FieldRef<"Item", 'String'>
+  readonly range: Prisma.FieldRef<"Item", 'String'>
+  readonly attacks: Prisma.FieldRef<"Item", 'Int'>
+  readonly ammo: Prisma.FieldRef<"Item", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Item", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Item", 'DateTime'>
 }
