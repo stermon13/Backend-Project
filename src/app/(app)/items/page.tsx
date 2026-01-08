@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -156,7 +155,7 @@ export default function ItemsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-            <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-serif font-bold text-foreground mb-2">Item Library</h1>

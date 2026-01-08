@@ -2,9 +2,8 @@ import {useEffect, useRef} from 'react'
 import {shallowEqual} from '@/lib/utils/shallowEqual'
 import {deriveCoCStats, type CoCNextDerivedStats} from '@/lib/rules/derivedStats'
 import type {UseFormSetValue} from 'react-hook-form'
-import type {CharacterFormValues} from '@/lib/validation/character.schema'
+import type {CharacterFormValues} from '@/schemas/character.schema'
 
-// This matches what react-hook-form actually gives you
 type CharacteristicsInput = {
   strength?: number
   constitution?: number

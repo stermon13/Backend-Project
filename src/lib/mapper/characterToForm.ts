@@ -1,5 +1,5 @@
 import type {CharacterWithRelations} from '@/types/character'
-import type {CharacterFormValues} from '@/lib/validation/character.schema'
+import type {CharacterFormValues} from '@/schemas/character.schema'
 
 export function characterToForm(character: CharacterWithRelations): CharacterFormValues {
   return {
@@ -87,5 +87,6 @@ export function characterToForm(character: CharacterWithRelations): CharacterFor
     cash: character.cash ?? '',
     assets: character.assets ?? '',
     notes: character.notes ?? '',
+    userId: character.userId,
   }
 }

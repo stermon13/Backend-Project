@@ -2,7 +2,7 @@
 
 import {Input} from '@/components/ui/input'
 import {useFormContext, type Path} from 'react-hook-form'
-import type {CharacterFormValues} from '@/lib/validation/character.schema'
+import type {CharacterFormValues} from '@/schemas/character.schema'
 import {cn} from '@/lib/utils'
 
 

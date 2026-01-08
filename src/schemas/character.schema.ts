@@ -92,6 +92,7 @@ export const characterSchema = z.object({
   cash: z.string().default(''),
   assets: z.string().default(''),
   notes: z.string().default(''),
+  userId: z.string(),
 })
 
 export type CharacterFormValues = z.input<typeof characterSchema>

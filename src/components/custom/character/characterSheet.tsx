@@ -12,7 +12,7 @@ import {Progress} from '@/components/ui/progress'
 import {Label} from '@/components/ui/label'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
 import {ArrowLeft, Skull, Brain, Heart, Zap, Plus, MoreVertical} from 'lucide-react'
-import {characterSchema, type CharacterFormValues, type CharacterFormResolved} from '@/lib/validation/character.schema'
+import {characterSchema, type CharacterFormValues, type CharacterFormResolved} from '@/schemas/character.schema'
 import type {CharacterWithRelations} from '@/types/character'
 import {
   StatField,
@@ -29,6 +29,8 @@ import type {Mode} from '@/types/mode'
 import {getCombatViewModel as buildCombat} from '@/lib/utils/combatViewModel'
 import {getStatPercentage, getSkillColor} from '@/lib/utils/stats'
 import type {ItemDto} from '@/types/item'
+import {createCharacterAction, updateCharacterAction} from '@/api/characterFunctions'
+import {useActionState, useTransition} from 'react'
 
 interface CharacterSheetProps {
   character: CharacterWithRelations
@@ -39,13 +41,57 @@ interface CharacterSheetProps {
   onEditClick?: () => void
 }
 
-export function CharacterSheet({character, items, mode, onSubmit, onBack, onEditClick}: CharacterSheetProps) {
+
+function convertToFormData(data: CharacterFormValues): FormData {
+  const formData = new FormData()
+  console.log('Data before converting to FormData:', data)
+
+  const isObject = (value: unknown) => value !== null && typeof value === 'object' && !Array.isArray(value)
+
+  for (const [key, value] of Object.entries(data)) {
+    console.log(key, value)
+
+    if (isObject(value)) {
+      formData.append(key, JSON.stringify(value))
+    } else if (Array.isArray(value)) {
+      formData.append(key, JSON.stringify(value))
+    } else {
+      formData.append(key, JSON.stringify(value))
+    }
+  }
+
+  for (const [key, value] of formData.entries()) {
+    console.log(`FormData Entry: ${key} = ${JSON.stringify(value)}`)
+  }
+  return formData
+}
+
+
+export function CharacterSheet({character, items, mode, onBack, onEditClick}: CharacterSheetProps) {
   const isEditable = mode !== 'view'
+
+  const [createCharacterState, createCharacterFormAction] = useActionState(createCharacterAction, {success: false})
+  const [updateCharacterState, updateCharacterFormAction] = useActionState(updateCharacterAction, {success: false})
+
 
   const form = useForm<CharacterFormValues>({
     resolver: zodResolver(characterSchema),
     defaultValues: characterToForm(character),
   })
+
+  const [isPending, startTransition] = useTransition()
+
+  const handleSubmit = (data: CharacterFormValues) => {
+    const formData = convertToFormData(data)
+    console.log('Form Data:', formData)
+    startTransition(() => {
+      if (mode === 'create') {
+        createCharacterFormAction(formData)
+      } else if (mode === 'edit') {
+        updateCharacterFormAction(formData)
+      }
+    })
+  }
 
   const {append, remove} = useFieldArray({
     control: form.control,
@@ -695,7 +741,14 @@ export function CharacterSheet({character, items, mode, onSubmit, onBack, onEdit
 
   return (
     <FormProvider {...form}>
-      {isEditable ? <form onSubmit={form.handleSubmit(onSubmit!)}>{content}</form> : content}
+      {isEditable ? (
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          {isPending && <div className="loading-spinner">Saving...</div>}
+          {content}
+        </form>
+      ) : (
+        content
+      )}
     </FormProvider>
   )
 }
