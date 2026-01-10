@@ -3,29 +3,63 @@
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import {Button} from '@/components/ui/button'
-import {ScrollText, Users, BookOpen, Dices, Package, Skull} from 'lucide-react'
+import {ScrollText, Users, BookOpen, Dices, Package, Skull, type LucideIcon} from 'lucide-react'
 import {cn} from '@/lib/utils'
 import {signOutServerFunction} from '@/serverFunctions/users'
 import type {Profile} from '@/models/users'
+import {rolePermissions} from '@/lib/permissions'
+import type {Route} from 'next'
+
 
 type CampaignNavProps = {
   profile: Profile | null
 }
 
-const navItems = [
+type PermissionKey = 'canAccessItems' | 'canAccessMonsters' | 'canAccessStories'
+
+type NavItem = {
+  href: Route
+  label: string
+  icon: LucideIcon
+  permission?: PermissionKey
+}
+
+const navItems: NavItem[] = [
   {href: '/dashboard', label: 'Campaigns', icon: ScrollText},
   {href: '/characters', label: 'Characters', icon: Users},
-  {href: '/stories', label: 'Stories', icon: BookOpen},
-  {href: '/items', label: 'Items', icon: Package},
-  {href: '/monsters', label: 'Monsters', icon: Skull},
+  {
+    href: '/stories',
+    label: 'Stories',
+    icon: BookOpen,
+    permission: 'canAccessStories',
+  },
+  {
+    href: '/items',
+    label: 'Items',
+    icon: Package,
+    permission: 'canAccessItems',
+  },
+  {
+    href: '/monsters',
+    label: 'Monsters',
+    icon: Skull,
+    permission: 'canAccessMonsters',
+  },
   {href: '/tools', label: 'Tools', icon: Dices},
-] as const
+]
+
 
 export function CampaignNav({profile}: CampaignNavProps) {
   const pathname = usePathname()
 
-  // 🔒 IMPORTANT: guard against missing profile
   if (!profile) return null
+
+  const permissions = rolePermissions[profile.role]
+
+  const visibleNavItems = navItems.filter(item => {
+    if (!item.permission) return true
+    return permissions[item.permission]
+  })
 
   return (
     <nav className="border-b border-border bg-card">
@@ -40,7 +74,7 @@ export function CampaignNav({profile}: CampaignNavProps) {
             </Link>
 
             <div className="flex gap-1">
-              {navItems.map(item => {
+              {visibleNavItems.map(item => {
                 const Icon = item.icon
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
 

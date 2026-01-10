@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState , useEffect} from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -33,87 +33,147 @@ import {
 interface Item {
   id: string
   name: string
-  category: "weapon" | "equipment" | "book" | "artifact" | "consumable" | "other"
+  category: 'weapon' | 'equipment' | 'book' | 'artifact' | 'consumable' | 'other'
   description: string
   value: string
   weight: string
+  damage?: string,
+  range?: string,
+  attacks?: number
+  ammo?: number
 }
 
 export default function ItemsPage() {
-  const [items, setItems] = useState<Item[]>([
-    {
-      id: "1",
-      name: ".38 Revolver",
-      category: "weapon",
-      description: "A standard service revolver. 6-round cylinder.",
-      value: "$25",
-      weight: "2 lbs",
-    },
-    {
-      id: "2",
-      name: "Flashlight",
-      category: "equipment",
-      description: "Battery-powered electric torch. Essential for exploring dark places.",
-      value: "$5",
-      weight: "1 lb",
-    },
-    {
-      id: "3",
-      name: "Necronomicon (Latin Translation)",
-      category: "book",
-      description: "A forbidden tome of eldritch knowledge. Reading may cost one's sanity.",
-      value: "Priceless",
-      weight: "5 lbs",
-    },
-    {
-      id: "4",
-      name: "Elder Sign Amulet",
-      category: "artifact",
-      description: "An ancient protective symbol. Said to ward off evil entities.",
-      value: "Unknown",
-      weight: "0.5 lbs",
-    },
-  ])
 
+  const [items, setItems] = useState<Item[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<Item | null>(null)
-  const [formData, setFormData] = useState<Omit<Item, "id">>({
-    name: "",
-    category: "equipment",
-    description: "",
-    value: "",
-    weight: "",
+  const [formData, setFormData] = useState<
+    Omit<Item, 'id'> & {damage?: string; range?: string; attacks?: number; ammo?: number}
+  >({
+    name: '',
+    category: 'equipment',
+    description: '',
+    value: '',
+    weight: '',
+    damage: '',
+    range: '',
+    attacks: 0,
+    ammo: 0,
   })
 
-  const handleAddItem = () => {
-    const newItem: Item = {
-      id: Date.now().toString(),
-      ...formData,
+
+
+  const [selectedCategory, setSelectedCategory] = useState('all')
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await fetch('/api/items')
+        if (!response.ok) {
+          throw new Error('Failed to fetch items')
+        }
+        const data: Item[] = (await response.json()) as Item[]
+        setItems(data)
+        console.info(`Fetched ${data.length} items successfully.`)
+      } catch (error) {
+        console.error('Error fetching items:', error)
+      }
     }
-    setItems([...items, newItem])
-    setIsDialogOpen(false)
-    resetForm()
+
+    fetchItems().catch(error => {
+      console.error('Error during fetching items:', error)
+    })
+  }, [])
+
+  const handleAddItem = async () => {
+    const newItem = {...formData}
+    console.info('Form data being sent:', newItem)
+
+    try {
+      const response = await fetch('/api/items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newItem),
+      })
+      if (response.ok) {
+        const createdItem = (await response.json()) as Item
+        setItems([...items, createdItem])
+        setIsDialogOpen(false)
+        resetForm()
+        console.info(`Created new item: ${createdItem.name}`)
+      } else {
+        console.error('Failed to create item')
+      }
+    } catch (error) {
+      console.error('Error creating item:', error)
+    }
   }
 
-  const handleEditItem = () => {
+  const handleEditItem = async () => {
     if (!editingItem) return
-    setItems(items.map((item) => (item.id === editingItem.id ? { ...editingItem, ...formData } : item)))
-    setEditingItem(null)
-    setIsDialogOpen(false)
-    resetForm()
+
+    const updatedItem = {...editingItem, ...formData}
+    console.info('Editing item:', updatedItem)
+
+    try {
+      const response = await fetch(`/api/items`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedItem),
+      })
+      if (response.ok) {
+        const updatedItemData = (await response.json()) as Item
+        setItems(items.map(item => (item.id === updatedItemData.id ? updatedItemData : item)))
+        setEditingItem(null)
+        setIsDialogOpen(false)
+        resetForm()
+        console.info(`Updated item: ${updatedItemData.name}`)
+      } else {
+        console.error('Failed to update item')
+      }
+    } catch (error) {
+      console.error('Error updating item:', error)
+    }
   }
 
-  const handleDeleteItem = (id: string) => {
-    setItems(items.filter((item) => item.id !== id))
+  const handleDeleteItem = async (id: string) => {
+    try {
+      const response = await fetch('/api/items', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id}),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete item')
+      }
+
+      setItems(prev => prev.filter(item => item.id !== id))
+      console.info(`Deleted item with id: ${id}`)
+    } catch (error) {
+      console.error('Error deleting item:', error)
+    }
   }
+
 
   const resetForm = () => {
     setFormData({
-      name: "",
-      category: "equipment",
-      description: "",
-      value: "",
-      weight: "",
+      name: '',
+      category: 'equipment',
+      description: '',
+      value: '',
+      weight: '',
+      damage: '',
+      range: '',
+      attacks: 0,
+      ammo: 0,
     })
   }
 
@@ -129,29 +189,27 @@ export default function ItemsPage() {
     setIsDialogOpen(true)
   }
 
-  const getCategoryColor = (category: Item["category"]) => {
+  const getCategoryColor = (category: Item['category']) => {
     switch (category) {
-      case "weapon":
-        return "bg-destructive text-destructive-foreground"
-      case "equipment":
-        return "bg-chart-2 text-primary-foreground"
-      case "book":
-        return "bg-chart-5 text-primary-foreground"
-      case "artifact":
-        return "bg-chart-4 text-primary-foreground"
-      case "consumable":
-        return "bg-chart-3 text-primary-foreground"
+      case 'weapon':
+        return 'bg-destructive text-destructive-foreground'
+      case 'equipment':
+        return 'bg-chart-2 text-primary-foreground'
+      case 'book':
+        return 'bg-chart-5 text-primary-foreground'
+      case 'artifact':
+        return 'bg-chart-4 text-primary-foreground'
+      case 'consumable':
+        return 'bg-chart-3 text-primary-foreground'
       default:
-        return "bg-muted text-muted-foreground"
+        return 'bg-muted text-muted-foreground'
     }
   }
 
   const filterByCategory = (category: string) => {
-    if (category === "all") return items
-    return items.filter((item) => item.category === category)
+    if (category === 'all') return items
+    return items.filter(item => item.category === category)
   }
-
-  const [selectedCategory, setSelectedCategory] = useState("all")
 
   return (
     <div className="min-h-screen bg-background">
@@ -168,17 +226,16 @@ export default function ItemsPage() {
                 onClick={() => {
                   setEditingItem(null)
                   resetForm()
-                }}
-              >
+                }}>
                 <Plus className="w-4 h-4" />
                 Add Item
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle className="font-serif">{editingItem ? "Edit Item" : "Add New Item"}</DialogTitle>
+                <DialogTitle className="font-serif">{editingItem ? 'Edit Item' : 'Add New Item'}</DialogTitle>
                 <DialogDescription>
-                  {editingItem ? "Update the item details below." : "Add a new item to your library."}
+                  {editingItem ? 'Update the item details below.' : 'Add a new item to your library.'}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
@@ -186,16 +243,16 @@ export default function ItemsPage() {
                   <Label>Item Name</Label>
                   <Input
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={e => setFormData({...formData, name: e.target.value})}
                     placeholder="e.g., Flashlight, Revolver, Ancient Tome"
                   />
                 </div>
+
                 <div className="space-y-2">
                   <Label>Category</Label>
                   <Select
                     value={formData.category}
-                    onValueChange={(value) => setFormData({ ...formData, category: value as Item["category"] })}
-                  >
+                    onValueChange={value => setFormData({...formData, category: value as Item['category']})}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -209,34 +266,80 @@ export default function ItemsPage() {
                     </SelectContent>
                   </Select>
                 </div>
+
                 <div className="space-y-2">
                   <Label>Description</Label>
                   <Textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    onChange={e => setFormData({...formData, description: e.target.value})}
                     placeholder="Describe the item's appearance, purpose, or special properties..."
                     rows={3}
                   />
                 </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Value</Label>
                     <Input
                       value={formData.value}
-                      onChange={(e) => setFormData({ ...formData, value: e.target.value })}
+                      onChange={e => setFormData({...formData, value: e.target.value})}
                       placeholder="e.g., $25, Priceless"
                     />
                   </div>
+
                   <div className="space-y-2">
                     <Label>Weight</Label>
                     <Input
                       value={formData.weight}
-                      onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                      onChange={e => setFormData({...formData, weight: e.target.value})}
                       placeholder="e.g., 2 lbs, 0.5 kg"
                     />
                   </div>
                 </div>
+
+                {formData.category === 'weapon' && (
+                  <>
+                    <div className="space-y-2">
+                      <Label>Damage (Optional)</Label>
+                      <Input
+                        value={formData.damage}
+                        onChange={e => setFormData({...formData, damage: e.target.value})}
+                        placeholder="e.g., 10"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Range (Optional)</Label>
+                      <Input
+                        value={formData.range}
+                        onChange={e => setFormData({...formData, range: e.target.value})}
+                        placeholder="e.g., 30 ft"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Attacks (Optional)</Label>
+                      <Input
+                        type="number"
+                        value={formData.attacks}
+                        onChange={e => setFormData({...formData, attacks: parseInt(e.target.value)})}
+                        placeholder="e.g., 3"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Ammo (Optional)</Label>
+                      <Input
+                        type="number"
+                        value={formData.ammo}
+                        onChange={e => setFormData({...formData, ammo: parseInt(e.target.value)})}
+                        placeholder="e.g., 5"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
+
               <DialogFooter>
                 <Button
                   variant="outline"
@@ -244,12 +347,11 @@ export default function ItemsPage() {
                     setIsDialogOpen(false)
                     setEditingItem(null)
                     resetForm()
-                  }}
-                >
+                  }}>
                   Cancel
                 </Button>
                 <Button onClick={editingItem ? handleEditItem : handleAddItem}>
-                  {editingItem ? "Save Changes" : "Add Item"}
+                  {editingItem ? 'Save Changes' : 'Add Item'}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -281,7 +383,7 @@ export default function ItemsPage() {
               <p className="text-muted-foreground">No items in this category yet.</p>
             </div>
           ) : (
-            filterByCategory(selectedCategory).map((item) => (
+            filterByCategory(selectedCategory).map(item => (
               <Card key={item.id} className="hover:border-primary/50 transition-colors">
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
