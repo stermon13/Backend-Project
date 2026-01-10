@@ -1,9 +1,20 @@
-import { prismaClient } from '@/dal/prismaClient'
+import {getSessionFromCookie} from '@/lib/sessionUtils'
+import {GetAllItems} from '@/serverFunctions/items'
 import type {ItemDto, ItemCategory} from '@/types/item'
 import {nullToUndefined} from '@/lib/utils/normalize'
 
-export async function fetchItems(): Promise<ItemDto[]> {
-  const items = await prismaClient.item.findMany()
+export async function proxyGetAllItems(): Promise<ItemDto[]> {
+  const session = await getSessionFromCookie(false)
+
+  if (!session) {
+    throw new Error('Unauthorized')
+  }
+
+  if (session.user.role !== 'Admin' && session.user.role !== 'Keeper') {
+    throw new Error('Forbidden')
+  }
+
+  const items = await GetAllItems()
 
   return items.map(item => ({
     id: item.id,
@@ -21,17 +32,3 @@ export async function fetchItems(): Promise<ItemDto[]> {
   }))
 }
 
-
-
-export async function fetchCharacter(id: string) {
-  return prismaClient.character.findUnique({
-    where: { id },
-    include: {
-      characteristics: true,
-      derivedStats: true,
-      skills: { include: { skill: true } },
-      possessions: { include: { item: true } },
-      contacts: true,
-    },
-  })
-}

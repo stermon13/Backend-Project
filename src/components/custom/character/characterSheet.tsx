@@ -29,7 +29,7 @@ import type {Mode} from '@/types/mode'
 import {getCombatViewModel as buildCombat} from '@/lib/utils/combatViewModel'
 import {getStatPercentage, getSkillColor} from '@/lib/utils/stats'
 import type {ItemDto} from '@/types/item'
-import {createCharacterAction, updateCharacterAction} from '@/api/characterFunctions'
+import {createCharacterAction, updateCharacterAction} from '@/serverFunctions/characterFunctions'
 import {useActionState, useTransition} from 'react'
 
 interface CharacterSheetProps {

@@ -1,7 +1,9 @@
+export type ItemCategory = 'weapon' | 'equipment' | 'book' | 'artifact' | 'consumable' | 'other'
+
 export type ItemDto = {
   id: string
   name: string
-  category: string
+  category: ItemCategory
   description: string
   value: string
   weight: string

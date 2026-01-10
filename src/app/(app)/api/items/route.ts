@@ -1,17 +1,7 @@
 import { NextResponse } from 'next/server'
-import { GetAllItems, CreateItem, UpdateItem, DeleteItem } from '@/api/items'
+import { GetAllItems, CreateItem, UpdateItem, DeleteItem } from '@/serverFunctions/items'
 import {createItemSchema, updateItemSchema} from '@/schemas/item.schema'
 import {requireRole} from '@/lib/auth'
-
-export async function GET() {
-  await requireRole(['Admin', 'Keeper'])
-  try {
-    const items = await GetAllItems()
-    return NextResponse.json(items)
-  } catch (error) {
-    return NextResponse.json({error: 'Failed to fetch items'}, {status: 500})
-  }
-}
 
 export async function POST(request: Request) {
   await requireRole(['Admin', 'Keeper'])
