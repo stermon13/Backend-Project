@@ -32,6 +32,7 @@ export type CharacterDerivedStatsAvgAggregateOutputType = {
   sanityCurrent: number | null
   sanityMax: number | null
   magicPointsCurrent: number | null
+  magicPointsMax: number | null
   luck: number | null
   movement: number | null
   build: number | null
@@ -43,6 +44,7 @@ export type CharacterDerivedStatsSumAggregateOutputType = {
   sanityCurrent: number | null
   sanityMax: number | null
   magicPointsCurrent: number | null
+  magicPointsMax: number | null
   luck: number | null
   movement: number | null
   build: number | null
@@ -55,6 +57,7 @@ export type CharacterDerivedStatsMinAggregateOutputType = {
   sanityCurrent: number | null
   sanityMax: number | null
   magicPointsCurrent: number | null
+  magicPointsMax: number | null
   luck: number | null
   movement: number | null
   build: number | null
@@ -71,6 +74,7 @@ export type CharacterDerivedStatsMaxAggregateOutputType = {
   sanityCurrent: number | null
   sanityMax: number | null
   magicPointsCurrent: number | null
+  magicPointsMax: number | null
   luck: number | null
   movement: number | null
   build: number | null
@@ -87,6 +91,7 @@ export type CharacterDerivedStatsCountAggregateOutputType = {
   sanityCurrent: number
   sanityMax: number
   magicPointsCurrent: number
+  magicPointsMax: number
   luck: number
   movement: number
   build: number
@@ -104,6 +109,7 @@ export type CharacterDerivedStatsAvgAggregateInputType = {
   sanityCurrent?: true
   sanityMax?: true
   magicPointsCurrent?: true
+  magicPointsMax?: true
   luck?: true
   movement?: true
   build?: true
@@ -115,6 +121,7 @@ export type CharacterDerivedStatsSumAggregateInputType = {
   sanityCurrent?: true
   sanityMax?: true
   magicPointsCurrent?: true
+  magicPointsMax?: true
   luck?: true
   movement?: true
   build?: true
@@ -127,6 +134,7 @@ export type CharacterDerivedStatsMinAggregateInputType = {
   sanityCurrent?: true
   sanityMax?: true
   magicPointsCurrent?: true
+  magicPointsMax?: true
   luck?: true
   movement?: true
   build?: true
@@ -143,6 +151,7 @@ export type CharacterDerivedStatsMaxAggregateInputType = {
   sanityCurrent?: true
   sanityMax?: true
   magicPointsCurrent?: true
+  magicPointsMax?: true
   luck?: true
   movement?: true
   build?: true
@@ -159,6 +168,7 @@ export type CharacterDerivedStatsCountAggregateInputType = {
   sanityCurrent?: true
   sanityMax?: true
   magicPointsCurrent?: true
+  magicPointsMax?: true
   luck?: true
   movement?: true
   build?: true
@@ -262,6 +272,7 @@ export type CharacterDerivedStatsGroupByOutputType = {
   sanityCurrent: number
   sanityMax: number
   magicPointsCurrent: number
+  magicPointsMax: number
   luck: number
   movement: number
   build: number
@@ -301,6 +312,7 @@ export type CharacterDerivedStatsWhereInput = {
   sanityCurrent?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   sanityMax?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   magicPointsCurrent?: Prisma.IntFilter<"CharacterDerivedStats"> | number
+  magicPointsMax?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   luck?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   movement?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   build?: Prisma.IntFilter<"CharacterDerivedStats"> | number
@@ -318,6 +330,7 @@ export type CharacterDerivedStatsOrderByWithRelationInput = {
   sanityCurrent?: Prisma.SortOrder
   sanityMax?: Prisma.SortOrder
   magicPointsCurrent?: Prisma.SortOrder
+  magicPointsMax?: Prisma.SortOrder
   luck?: Prisma.SortOrder
   movement?: Prisma.SortOrder
   build?: Prisma.SortOrder
@@ -339,6 +352,7 @@ export type CharacterDerivedStatsWhereUniqueInput = Prisma.AtLeast<{
   sanityCurrent?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   sanityMax?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   magicPointsCurrent?: Prisma.IntFilter<"CharacterDerivedStats"> | number
+  magicPointsMax?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   luck?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   movement?: Prisma.IntFilter<"CharacterDerivedStats"> | number
   build?: Prisma.IntFilter<"CharacterDerivedStats"> | number
@@ -355,6 +369,7 @@ export type CharacterDerivedStatsOrderByWithAggregationInput = {
   sanityCurrent?: Prisma.SortOrder
   sanityMax?: Prisma.SortOrder
   magicPointsCurrent?: Prisma.SortOrder
+  magicPointsMax?: Prisma.SortOrder
   luck?: Prisma.SortOrder
   movement?: Prisma.SortOrder
   build?: Prisma.SortOrder
@@ -379,6 +394,7 @@ export type CharacterDerivedStatsScalarWhereWithAggregatesInput = {
   sanityCurrent?: Prisma.IntWithAggregatesFilter<"CharacterDerivedStats"> | number
   sanityMax?: Prisma.IntWithAggregatesFilter<"CharacterDerivedStats"> | number
   magicPointsCurrent?: Prisma.IntWithAggregatesFilter<"CharacterDerivedStats"> | number
+  magicPointsMax?: Prisma.IntWithAggregatesFilter<"CharacterDerivedStats"> | number
   luck?: Prisma.IntWithAggregatesFilter<"CharacterDerivedStats"> | number
   movement?: Prisma.IntWithAggregatesFilter<"CharacterDerivedStats"> | number
   build?: Prisma.IntWithAggregatesFilter<"CharacterDerivedStats"> | number
@@ -395,6 +411,7 @@ export type CharacterDerivedStatsCreateInput = {
   sanityCurrent: number
   sanityMax: number
   magicPointsCurrent: number
+  magicPointsMax: number
   luck: number
   movement: number
   build: number
@@ -411,6 +428,7 @@ export type CharacterDerivedStatsUncheckedCreateInput = {
   sanityCurrent: number
   sanityMax: number
   magicPointsCurrent: number
+  magicPointsMax: number
   luck: number
   movement: number
   build: number
@@ -427,6 +445,7 @@ export type CharacterDerivedStatsUpdateInput = {
   sanityCurrent?: Prisma.IntFieldUpdateOperationsInput | number
   sanityMax?: Prisma.IntFieldUpdateOperationsInput | number
   magicPointsCurrent?: Prisma.IntFieldUpdateOperationsInput | number
+  magicPointsMax?: Prisma.IntFieldUpdateOperationsInput | number
   luck?: Prisma.IntFieldUpdateOperationsInput | number
   movement?: Prisma.IntFieldUpdateOperationsInput | number
   build?: Prisma.IntFieldUpdateOperationsInput | number
@@ -443,6 +462,7 @@ export type CharacterDerivedStatsUncheckedUpdateInput = {
   sanityCurrent?: Prisma.IntFieldUpdateOperationsInput | number
   sanityMax?: Prisma.IntFieldUpdateOperationsInput | number
   magicPointsCurrent?: Prisma.IntFieldUpdateOperationsInput | number
+  magicPointsMax?: Prisma.IntFieldUpdateOperationsInput | number
   luck?: Prisma.IntFieldUpdateOperationsInput | number
   movement?: Prisma.IntFieldUpdateOperationsInput | number
   build?: Prisma.IntFieldUpdateOperationsInput | number
@@ -459,6 +479,7 @@ export type CharacterDerivedStatsCreateManyInput = {
   sanityCurrent: number
   sanityMax: number
   magicPointsCurrent: number
+  magicPointsMax: number
   luck: number
   movement: number
   build: number
@@ -475,6 +496,7 @@ export type CharacterDerivedStatsUpdateManyMutationInput = {
   sanityCurrent?: Prisma.IntFieldUpdateOperationsInput | number
   sanityMax?: Prisma.IntFieldUpdateOperationsInput | number
   magicPointsCurrent?: Prisma.IntFieldUpdateOperationsInput | number
+  magicPointsMax?: Prisma.IntFieldUpdateOperationsInput | number
   luck?: Prisma.IntFieldUpdateOperationsInput | number
   movement?: Prisma.IntFieldUpdateOperationsInput | number
   build?: Prisma.IntFieldUpdateOperationsInput | number
@@ -490,6 +512,7 @@ export type CharacterDerivedStatsUncheckedUpdateManyInput = {
   sanityCurrent?: Prisma.IntFieldUpdateOperationsInput | number
   sanityMax?: Prisma.IntFieldUpdateOperationsInput | number
   magicPointsCurrent?: Prisma.IntFieldUpdateOperationsInput | number
+  magicPointsMax?: Prisma.IntFieldUpdateOperationsInput | number
   luck?: Prisma.IntFieldUpdateOperationsInput | number
   movement?: Prisma.IntFieldUpdateOperationsInput | number
   build?: Prisma.IntFieldUpdateOperationsInput | number
@@ -511,6 +534,7 @@ export type CharacterDerivedStatsCountOrderByAggregateInput = {
   sanityCurrent?: Prisma.SortOrder
   sanityMax?: Prisma.SortOrder
   magicPointsCurrent?: Prisma.SortOrder
+  magicPointsMax?: Prisma.SortOrder
   luck?: Prisma.SortOrder
   movement?: Prisma.SortOrder
   build?: Prisma.SortOrder
@@ -526,6 +550,7 @@ export type CharacterDerivedStatsAvgOrderByAggregateInput = {
   sanityCurrent?: Prisma.SortOrder
   sanityMax?: Prisma.SortOrder
   magicPointsCurrent?: Prisma.SortOrder
+  magicPointsMax?: Prisma.SortOrder
   luck?: Prisma.SortOrder
   movement?: Prisma.SortOrder
   build?: Prisma.SortOrder
@@ -538,6 +563,7 @@ export type CharacterDerivedStatsMaxOrderByAggregateInput = {
   sanityCurrent?: Prisma.SortOrder
   sanityMax?: Prisma.SortOrder
   magicPointsCurrent?: Prisma.SortOrder
+  magicPointsMax?: Prisma.SortOrder
   luck?: Prisma.SortOrder
   movement?: Prisma.SortOrder
   build?: Prisma.SortOrder
@@ -554,6 +580,7 @@ export type CharacterDerivedStatsMinOrderByAggregateInput = {
   sanityCurrent?: Prisma.SortOrder
   sanityMax?: Prisma.SortOrder
   magicPointsCurrent?: Prisma.SortOrder
+  magicPointsMax?: Prisma.SortOrder
   luck?: Prisma.SortOrder
   movement?: Prisma.SortOrder
   build?: Prisma.SortOrder
@@ -569,6 +596,7 @@ export type CharacterDerivedStatsSumOrderByAggregateInput = {
   sanityCurrent?: Prisma.SortOrder
   sanityMax?: Prisma.SortOrder
   magicPointsCurrent?: Prisma.SortOrder
+  magicPointsMax?: Prisma.SortOrder
   luck?: Prisma.SortOrder
   movement?: Prisma.SortOrder
   build?: Prisma.SortOrder
@@ -613,6 +641,7 @@ export type CharacterDerivedStatsCreateWithoutCharacterInput = {
   sanityCurrent: number
   sanityMax: number
   magicPointsCurrent: number
+  magicPointsMax: number
   luck: number
   movement: number
   build: number
@@ -628,6 +657,7 @@ export type CharacterDerivedStatsUncheckedCreateWithoutCharacterInput = {
   sanityCurrent: number
   sanityMax: number
   magicPointsCurrent: number
+  magicPointsMax: number
   luck: number
   movement: number
   build: number
@@ -659,6 +689,7 @@ export type CharacterDerivedStatsUpdateWithoutCharacterInput = {
   sanityCurrent?: Prisma.IntFieldUpdateOperationsInput | number
   sanityMax?: Prisma.IntFieldUpdateOperationsInput | number
   magicPointsCurrent?: Prisma.IntFieldUpdateOperationsInput | number
+  magicPointsMax?: Prisma.IntFieldUpdateOperationsInput | number
   luck?: Prisma.IntFieldUpdateOperationsInput | number
   movement?: Prisma.IntFieldUpdateOperationsInput | number
   build?: Prisma.IntFieldUpdateOperationsInput | number
@@ -674,6 +705,7 @@ export type CharacterDerivedStatsUncheckedUpdateWithoutCharacterInput = {
   sanityCurrent?: Prisma.IntFieldUpdateOperationsInput | number
   sanityMax?: Prisma.IntFieldUpdateOperationsInput | number
   magicPointsCurrent?: Prisma.IntFieldUpdateOperationsInput | number
+  magicPointsMax?: Prisma.IntFieldUpdateOperationsInput | number
   luck?: Prisma.IntFieldUpdateOperationsInput | number
   movement?: Prisma.IntFieldUpdateOperationsInput | number
   build?: Prisma.IntFieldUpdateOperationsInput | number
@@ -691,6 +723,7 @@ export type CharacterDerivedStatsSelect<ExtArgs extends runtime.Types.Extensions
   sanityCurrent?: boolean
   sanityMax?: boolean
   magicPointsCurrent?: boolean
+  magicPointsMax?: boolean
   luck?: boolean
   movement?: boolean
   build?: boolean
@@ -708,6 +741,7 @@ export type CharacterDerivedStatsSelectCreateManyAndReturn<ExtArgs extends runti
   sanityCurrent?: boolean
   sanityMax?: boolean
   magicPointsCurrent?: boolean
+  magicPointsMax?: boolean
   luck?: boolean
   movement?: boolean
   build?: boolean
@@ -725,6 +759,7 @@ export type CharacterDerivedStatsSelectUpdateManyAndReturn<ExtArgs extends runti
   sanityCurrent?: boolean
   sanityMax?: boolean
   magicPointsCurrent?: boolean
+  magicPointsMax?: boolean
   luck?: boolean
   movement?: boolean
   build?: boolean
@@ -742,6 +777,7 @@ export type CharacterDerivedStatsSelectScalar = {
   sanityCurrent?: boolean
   sanityMax?: boolean
   magicPointsCurrent?: boolean
+  magicPointsMax?: boolean
   luck?: boolean
   movement?: boolean
   build?: boolean
@@ -751,7 +787,7 @@ export type CharacterDerivedStatsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CharacterDerivedStatsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hitPointsCurrent" | "hitPointsMax" | "sanityCurrent" | "sanityMax" | "magicPointsCurrent" | "luck" | "movement" | "build" | "damageBonus" | "characterId" | "createdAt" | "updatedAt", ExtArgs["result"]["characterDerivedStats"]>
+export type CharacterDerivedStatsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hitPointsCurrent" | "hitPointsMax" | "sanityCurrent" | "sanityMax" | "magicPointsCurrent" | "magicPointsMax" | "luck" | "movement" | "build" | "damageBonus" | "characterId" | "createdAt" | "updatedAt", ExtArgs["result"]["characterDerivedStats"]>
 export type CharacterDerivedStatsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   character?: boolean | Prisma.CharacterDefaultArgs<ExtArgs>
 }
@@ -774,6 +810,7 @@ export type $CharacterDerivedStatsPayload<ExtArgs extends runtime.Types.Extensio
     sanityCurrent: number
     sanityMax: number
     magicPointsCurrent: number
+    magicPointsMax: number
     luck: number
     movement: number
     build: number
@@ -1211,6 +1248,7 @@ export interface CharacterDerivedStatsFieldRefs {
   readonly sanityCurrent: Prisma.FieldRef<"CharacterDerivedStats", 'Int'>
   readonly sanityMax: Prisma.FieldRef<"CharacterDerivedStats", 'Int'>
   readonly magicPointsCurrent: Prisma.FieldRef<"CharacterDerivedStats", 'Int'>
+  readonly magicPointsMax: Prisma.FieldRef<"CharacterDerivedStats", 'Int'>
   readonly luck: Prisma.FieldRef<"CharacterDerivedStats", 'Int'>
   readonly movement: Prisma.FieldRef<"CharacterDerivedStats", 'Int'>
   readonly build: Prisma.FieldRef<"CharacterDerivedStats", 'Int'>
