@@ -62,8 +62,8 @@ export const characterContactFormSchema = z.object({
   description: z.string().optional(),
 })
 
-
 export const characterSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1),
   occupation: z.string().min(1),
   age: z.number().int().min(0),
@@ -109,13 +109,4 @@ export const updateCharacterSchema = characterSchema.extend({
 export const updateCharacteristicsSchema = z.object({
   characterId: z.uuid({message: 'Invalid UUID'}),
   characteristics: characteristicsSchema,
-})
-
-export const updateDerivedStatsSchema = z.object({
-  characterId: z.uuid({message: 'Invalid UUID'}),
-  derivedStats: derivedStatsSchema,
-})
-
-export const deleteCharacterSchema = z.object({
-  id: z.uuid({message: 'Invalid UUID'}),
 })

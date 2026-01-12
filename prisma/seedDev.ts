@@ -553,6 +553,7 @@ export const seedDev = async (prisma: PrismaClient) => {
             {
               description: `Clue ${i}: A fragment of correspondence mentioning forbidden names.`,
               discoveredAt: new Date(1928, i - 1, 15),
+              discovered: 'Hidden',
             },
           ],
         },

@@ -251,6 +251,7 @@ model Clue {
   id           String   @id @default(uuid()) @db.Uuid
   description  String
   discoveredAt DateTime
+  discovered   String
 
   InvestigationSessionId String               @db.Uuid
   investigationSession   InvestigationSession @relation(fields: [InvestigationSessionId], references: [id])

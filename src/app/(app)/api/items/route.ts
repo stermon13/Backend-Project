@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { GetAllItems, CreateItem, UpdateItem, DeleteItem } from '@/serverFunctions/items'
+import { CreateItem, UpdateItem, DeleteItem } from '@/serverFunctions/items'
 import {createItemSchema, updateItemSchema} from '@/schemas/item.schema'
 import {requireRole} from '@/lib/auth'
 
@@ -62,8 +62,3 @@ export async function DELETE(request: Request) {
     return NextResponse.json({error: 'Failed to delete item'}, {status: 500})
   }
 }
-
-
-
-
-
