@@ -1,33 +1,33 @@
 import {z} from 'zod'
 
 export const characteristicsSchema = z.object({
-  strength: z.number().int(),
-  constitution: z.number().int(),
-  size: z.number().int(),
-  dexterity: z.number().int(),
-  appearance: z.number().int(),
-  intelligence: z.number().int(),
-  power: z.number().int(),
-  education: z.number().int(),
+  strength: z.number().int().positive(),
+  constitution: z.number().int().positive(),
+  size: z.number().int().positive(),
+  dexterity: z.number().int().positive(),
+  appearance: z.number().int().positive(),
+  intelligence: z.number().int().positive(),
+  power: z.number().int().positive(),
+  education: z.number().int().positive(),
 })
 
 export const derivedStatsSchema = z.object({
-  hitPointsCurrent: z.number().int(),
-  hitPointsMax: z.number().int(),
-  sanityCurrent: z.number().int(),
-  sanityMax: z.number().int(),
-  magicPointsCurrent: z.number().int(),
-  magicPointsMax: z.number().int(),
-  luck: z.number().int(),
-  movement: z.number().int(),
-  build: z.number().int(),
+  hitPointsCurrent: z.number().int().positive(),
+  hitPointsMax: z.number().int().positive(),
+  sanityCurrent: z.number().int().positive(),
+  sanityMax: z.number().int().positive(),
+  magicPointsCurrent: z.number().int().positive(),
+  magicPointsMax: z.number().int().positive(),
+  luck: z.number().int().positive(),
+  movement: z.number().int().positive(),
+  build: z.number().int().positive(),
   damageBonus: z.string(),
 })
 
 export const characterSkillFormSchema = z.object({
   id: z.string(),
   skillId: z.string(),
-  value: z.number().int().min(0).max(100),
+  value: z.number().int().min(0).max(100).positive(),
   skill: z.object({
     id: z.string(),
     name: z.string(),
@@ -38,7 +38,7 @@ export const characterSkillFormSchema = z.object({
 export const characterPossessionFormSchema = z.object({
   id: z.string(),
   itemId: z.string(),
-  quantity: z.number().int().min(1),
+  quantity: z.number().int().min(1).positive(),
   item: z.object({
     id: z.string(),
     name: z.string(),
@@ -48,8 +48,8 @@ export const characterPossessionFormSchema = z.object({
     weight: z.string(),
     damage: z.string().optional(),
     range: z.string().optional(),
-    attacks: z.number().int().optional(),
-    ammo: z.number().int().optional(),
+    attacks: z.number().int().positive().optional(),
+    ammo: z.number().int().positive().optional(),
     createdAt: z.date(),
     updatedAt: z.date(),
   }),
@@ -66,7 +66,7 @@ export const characterSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1),
   occupation: z.string().min(1),
-  age: z.number().int().min(0),
+  age: z.number().int().min(0).positive(),
   sex: z.string().min(1),
   residence: z.string().min(1),
   birthplace: z.string().min(1),

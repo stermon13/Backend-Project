@@ -77,9 +77,9 @@ export default function StoriesList({sessions, clues}: props) {
                   <CardContent>
                     <p className="text-sm text-foreground mb-4 line-clamp-2">{session.summary}</p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {session.clues.slice(0, 3).map((clue, i) => (
+                      {session.clues.map((clue, i) => (
                         <Badge key={i} variant="outline" className="text-xs">
-                          {clue}
+                          {clue.title}
                         </Badge>
                       ))}
                       {session.clues.length > 3 && (

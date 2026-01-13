@@ -21,6 +21,9 @@ export async function proxyGetAllClues(): Promise<ClueDto[]> {
     createdAt: clue.createdAt,
     updatedAt: clue.updatedAt,
     discovered: clue.discovered,
+    title: clue.title,
+    relatedTo: clue.relatedTo,
+    campaign: clue.campaign,
   }))
 }
 
@@ -45,6 +48,9 @@ export async function proxyGetClueById(id: string): Promise<ClueDto | null> {
     createdAt: clue.createdAt,
     updatedAt: clue.updatedAt,
     discovered: clue.discovered,
+    title: clue.title,
+    relatedTo: clue.relatedTo,
+    campaign: clue.campaign,
   }
 }
 
