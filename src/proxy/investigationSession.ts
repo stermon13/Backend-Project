@@ -6,7 +6,7 @@ import {
   updateInvestigationSession,
   deleteInvestigationSession,
 } from '@/dal/investigationSession'
-import type {InvestigationSessionDto} from '@/types/investigationSession'
+import type {InvestigationSessionDetailDto, InvestigationSessionDto} from '@/types/investigationSession'
 
 export async function proxyGetAllInvestigationSessions(): Promise<InvestigationSessionDto[]> {
   const session = await getSessionFromCookie(false)
@@ -37,7 +37,7 @@ export async function proxyGetAllInvestigationSessions(): Promise<InvestigationS
   }))
 }
 
-export async function proxyGetInvestigationSessionById(id: string): Promise<InvestigationSessionDto | null> {
+export async function proxyGetInvestigationSessionById(id: string): Promise<InvestigationSessionDetailDto | null> {
   const session = await getSessionFromCookie(false)
 
   if (!session) {
@@ -65,6 +65,7 @@ export async function proxyGetInvestigationSessionById(id: string): Promise<Inve
     npcs: sessionData.npcs,
     createdAt: sessionData.createdAt,
     updatedAt: sessionData.updatedAt,
+    investigators: sessionData.investigators,
   }
 }
 

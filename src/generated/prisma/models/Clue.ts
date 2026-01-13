@@ -29,6 +29,8 @@ export type ClueMinAggregateOutputType = {
   description: string | null
   discoveredAt: Date | null
   discovered: string | null
+  title: string | null
+  relatedTo: string | null
   InvestigationSessionId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -39,6 +41,8 @@ export type ClueMaxAggregateOutputType = {
   description: string | null
   discoveredAt: Date | null
   discovered: string | null
+  title: string | null
+  relatedTo: string | null
   InvestigationSessionId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -49,6 +53,8 @@ export type ClueCountAggregateOutputType = {
   description: number
   discoveredAt: number
   discovered: number
+  title: number
+  relatedTo: number
   InvestigationSessionId: number
   createdAt: number
   updatedAt: number
@@ -61,6 +67,8 @@ export type ClueMinAggregateInputType = {
   description?: true
   discoveredAt?: true
   discovered?: true
+  title?: true
+  relatedTo?: true
   InvestigationSessionId?: true
   createdAt?: true
   updatedAt?: true
@@ -71,6 +79,8 @@ export type ClueMaxAggregateInputType = {
   description?: true
   discoveredAt?: true
   discovered?: true
+  title?: true
+  relatedTo?: true
   InvestigationSessionId?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +91,8 @@ export type ClueCountAggregateInputType = {
   description?: true
   discoveredAt?: true
   discovered?: true
+  title?: true
+  relatedTo?: true
   InvestigationSessionId?: true
   createdAt?: true
   updatedAt?: true
@@ -164,6 +176,8 @@ export type ClueGroupByOutputType = {
   description: string
   discoveredAt: Date
   discovered: string
+  title: string
+  relatedTo: string
   InvestigationSessionId: string
   createdAt: Date
   updatedAt: Date
@@ -195,6 +209,8 @@ export type ClueWhereInput = {
   description?: Prisma.StringFilter<"Clue"> | string
   discoveredAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
   discovered?: Prisma.StringFilter<"Clue"> | string
+  title?: Prisma.StringFilter<"Clue"> | string
+  relatedTo?: Prisma.StringFilter<"Clue"> | string
   InvestigationSessionId?: Prisma.UuidFilter<"Clue"> | string
   createdAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
@@ -206,6 +222,8 @@ export type ClueOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   discoveredAt?: Prisma.SortOrder
   discovered?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  relatedTo?: Prisma.SortOrder
   InvestigationSessionId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -220,6 +238,8 @@ export type ClueWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Clue"> | string
   discoveredAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
   discovered?: Prisma.StringFilter<"Clue"> | string
+  title?: Prisma.StringFilter<"Clue"> | string
+  relatedTo?: Prisma.StringFilter<"Clue"> | string
   InvestigationSessionId?: Prisma.UuidFilter<"Clue"> | string
   createdAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
@@ -231,6 +251,8 @@ export type ClueOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   discoveredAt?: Prisma.SortOrder
   discovered?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  relatedTo?: Prisma.SortOrder
   InvestigationSessionId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -247,6 +269,8 @@ export type ClueScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Clue"> | string
   discoveredAt?: Prisma.DateTimeWithAggregatesFilter<"Clue"> | Date | string
   discovered?: Prisma.StringWithAggregatesFilter<"Clue"> | string
+  title?: Prisma.StringWithAggregatesFilter<"Clue"> | string
+  relatedTo?: Prisma.StringWithAggregatesFilter<"Clue"> | string
   InvestigationSessionId?: Prisma.UuidWithAggregatesFilter<"Clue"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Clue"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Clue"> | Date | string
@@ -257,6 +281,8 @@ export type ClueCreateInput = {
   description: string
   discoveredAt: Date | string
   discovered: string
+  title: string
+  relatedTo: string
   createdAt?: Date | string
   updatedAt?: Date | string
   investigationSession: Prisma.InvestigationSessionCreateNestedOneWithoutCluesInput
@@ -267,6 +293,8 @@ export type ClueUncheckedCreateInput = {
   description: string
   discoveredAt: Date | string
   discovered: string
+  title: string
+  relatedTo: string
   InvestigationSessionId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -277,6 +305,8 @@ export type ClueUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   discoveredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   discovered?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  relatedTo?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   investigationSession?: Prisma.InvestigationSessionUpdateOneRequiredWithoutCluesNestedInput
@@ -287,6 +317,8 @@ export type ClueUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   discoveredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   discovered?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  relatedTo?: Prisma.StringFieldUpdateOperationsInput | string
   InvestigationSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -297,6 +329,8 @@ export type ClueCreateManyInput = {
   description: string
   discoveredAt: Date | string
   discovered: string
+  title: string
+  relatedTo: string
   InvestigationSessionId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -307,6 +341,8 @@ export type ClueUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   discoveredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   discovered?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  relatedTo?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -316,6 +352,8 @@ export type ClueUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   discoveredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   discovered?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  relatedTo?: Prisma.StringFieldUpdateOperationsInput | string
   InvestigationSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -336,6 +374,8 @@ export type ClueCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   discoveredAt?: Prisma.SortOrder
   discovered?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  relatedTo?: Prisma.SortOrder
   InvestigationSessionId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -346,6 +386,8 @@ export type ClueMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   discoveredAt?: Prisma.SortOrder
   discovered?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  relatedTo?: Prisma.SortOrder
   InvestigationSessionId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -356,6 +398,8 @@ export type ClueMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   discoveredAt?: Prisma.SortOrder
   discovered?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  relatedTo?: Prisma.SortOrder
   InvestigationSessionId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -408,6 +452,8 @@ export type ClueCreateWithoutInvestigationSessionInput = {
   description: string
   discoveredAt: Date | string
   discovered: string
+  title: string
+  relatedTo: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -417,6 +463,8 @@ export type ClueUncheckedCreateWithoutInvestigationSessionInput = {
   description: string
   discoveredAt: Date | string
   discovered: string
+  title: string
+  relatedTo: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -455,6 +503,8 @@ export type ClueScalarWhereInput = {
   description?: Prisma.StringFilter<"Clue"> | string
   discoveredAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
   discovered?: Prisma.StringFilter<"Clue"> | string
+  title?: Prisma.StringFilter<"Clue"> | string
+  relatedTo?: Prisma.StringFilter<"Clue"> | string
   InvestigationSessionId?: Prisma.UuidFilter<"Clue"> | string
   createdAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Clue"> | Date | string
@@ -465,6 +515,8 @@ export type ClueCreateManyInvestigationSessionInput = {
   description: string
   discoveredAt: Date | string
   discovered: string
+  title: string
+  relatedTo: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -474,6 +526,8 @@ export type ClueUpdateWithoutInvestigationSessionInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   discoveredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   discovered?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  relatedTo?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -483,6 +537,8 @@ export type ClueUncheckedUpdateWithoutInvestigationSessionInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   discoveredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   discovered?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  relatedTo?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -492,6 +548,8 @@ export type ClueUncheckedUpdateManyWithoutInvestigationSessionInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   discoveredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   discovered?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  relatedTo?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -503,6 +561,8 @@ export type ClueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   description?: boolean
   discoveredAt?: boolean
   discovered?: boolean
+  title?: boolean
+  relatedTo?: boolean
   InvestigationSessionId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -514,6 +574,8 @@ export type ClueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   description?: boolean
   discoveredAt?: boolean
   discovered?: boolean
+  title?: boolean
+  relatedTo?: boolean
   InvestigationSessionId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -525,6 +587,8 @@ export type ClueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   description?: boolean
   discoveredAt?: boolean
   discovered?: boolean
+  title?: boolean
+  relatedTo?: boolean
   InvestigationSessionId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -536,12 +600,14 @@ export type ClueSelectScalar = {
   description?: boolean
   discoveredAt?: boolean
   discovered?: boolean
+  title?: boolean
+  relatedTo?: boolean
   InvestigationSessionId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "discoveredAt" | "discovered" | "InvestigationSessionId" | "createdAt" | "updatedAt", ExtArgs["result"]["clue"]>
+export type ClueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "discoveredAt" | "discovered" | "title" | "relatedTo" | "InvestigationSessionId" | "createdAt" | "updatedAt", ExtArgs["result"]["clue"]>
 export type ClueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   investigationSession?: boolean | Prisma.InvestigationSessionDefaultArgs<ExtArgs>
 }
@@ -562,6 +628,8 @@ export type $CluePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     description: string
     discoveredAt: Date
     discovered: string
+    title: string
+    relatedTo: string
     InvestigationSessionId: string
     createdAt: Date
     updatedAt: Date
@@ -993,6 +1061,8 @@ export interface ClueFieldRefs {
   readonly description: Prisma.FieldRef<"Clue", 'String'>
   readonly discoveredAt: Prisma.FieldRef<"Clue", 'DateTime'>
   readonly discovered: Prisma.FieldRef<"Clue", 'String'>
+  readonly title: Prisma.FieldRef<"Clue", 'String'>
+  readonly relatedTo: Prisma.FieldRef<"Clue", 'String'>
   readonly InvestigationSessionId: Prisma.FieldRef<"Clue", 'String'>
   readonly createdAt: Prisma.FieldRef<"Clue", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Clue", 'DateTime'>

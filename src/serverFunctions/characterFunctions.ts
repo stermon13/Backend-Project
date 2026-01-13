@@ -13,7 +13,7 @@ export const createCharacterAction = publicFormAction({
       const character = await createCharacter(data)
       logger.info(`Character created successfully: ${character.id}`)
 
-      return {success: true} // Ensure return is typed correctly
+      return {success: true}
     } catch (error) {
       logger.error(`Failed to create character: ${error instanceof Error ? error.message : 'Unknown error'}`)
       return {

@@ -302,6 +302,8 @@ export const ClueScalarFieldEnum = {
   description: 'description',
   discoveredAt: 'discoveredAt',
   discovered: 'discovered',
+  title: 'title',
+  relatedTo: 'relatedTo',
   InvestigationSessionId: 'InvestigationSessionId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

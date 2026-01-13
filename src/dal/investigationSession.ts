@@ -3,7 +3,7 @@ import type {
   CreateInvestigationSessionInput,
   UpdateInvestigationSessionInput,
 } from '@/schemas/investigationSessions.scheme'
-import type {InvestigationSessionDto} from '@/types/investigationSession'
+import type {InvestigationSessionDetailDto, InvestigationSessionDto} from '@/types/investigationSession'
 
 export async function getAllInvestigationSessions(): Promise<InvestigationSessionDto[]> {
   const sessions = await prismaClient.investigationSession.findMany({
@@ -21,6 +21,8 @@ export async function getAllInvestigationSessions(): Promise<InvestigationSessio
       id: clue.id,
       description: clue.description,
       discoveredAt: clue.discoveredAt,
+      discovered: clue.discovered,
+      title: clue.title,
       InvestigationSessionId: clue.InvestigationSessionId,
       createdAt: clue.createdAt,
       updatedAt: clue.updatedAt,
@@ -40,13 +42,18 @@ export async function getAllInvestigationSessions(): Promise<InvestigationSessio
   }))
 }
 
-export async function getInvestigationSessionById(id: string): Promise<InvestigationSessionDto | null> {
+export async function getInvestigationSessionById(id: string): Promise<InvestigationSessionDetailDto | null> {
   const session = await prismaClient.investigationSession.findUnique({
     where: {id},
     include: {
       clues: true,
       locations: true,
       npcs: true,
+      Campaign: {
+        include: {
+          investigators: true,
+        },
+      },
     },
   })
 
@@ -54,10 +61,17 @@ export async function getInvestigationSessionById(id: string): Promise<Investiga
 
   return {
     ...session,
+    investigators: session.Campaign.investigators.map(inv => ({
+      id: inv.id,
+      name: inv.name,
+      occupation: inv.occupation ?? undefined,
+    })),
     clues: session.clues.map(clue => ({
       id: clue.id,
       description: clue.description,
       discoveredAt: clue.discoveredAt,
+      discovered: clue.discovered,
+      title: clue.title,
       InvestigationSessionId: clue.InvestigationSessionId,
       createdAt: clue.createdAt,
       updatedAt: clue.updatedAt,
