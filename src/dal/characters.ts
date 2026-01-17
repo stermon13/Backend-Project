@@ -32,7 +32,7 @@ export async function createCharacter(data: CharacterFormValues) {
           })),
         },
         possessions: {
-          create: data.possessions.map(p => ({
+          create: (data.possessions ?? []).map(p => ({
             itemId: p.itemId,
             quantity: p.quantity,
           })),

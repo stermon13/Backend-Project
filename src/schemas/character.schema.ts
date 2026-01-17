@@ -27,7 +27,7 @@ export const derivedStatsSchema = z.object({
 export const characterSkillFormSchema = z.object({
   id: z.string(),
   skillId: z.string(),
-  value: z.number().int().min(0).max(100).positive(),
+  value: z.number().int().min(0).max(100),
   skill: z.object({
     id: z.string(),
     name: z.string(),
@@ -77,7 +77,7 @@ export const characterSchema = z.object({
   characteristics: characteristicsSchema,
   derivedStats: derivedStatsSchema,
   skills: z.array(characterSkillFormSchema),
-  possessions: z.array(characterPossessionFormSchema),
+  possessions: z.array(characterPossessionFormSchema).default([]),
   contacts: z.array(characterContactFormSchema).default([]),
 
   backstory: z.string().default(''),
