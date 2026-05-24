@@ -12,7 +12,7 @@ import {Separator} from '@/components/ui/separator'
 import {Progress} from '@/components/ui/progress'
 import {Label} from '@/components/ui/label'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
-import {ArrowLeft, Skull, Brain, Heart, Zap, Plus, MoreVertical} from 'lucide-react'
+import {ArrowLeft, Skull, Brain, Heart, Zap, Plus, MoreVertical, Trash2} from 'lucide-react'
 import {
   characterSchema,
   createCharacterSchema,
@@ -35,7 +35,7 @@ import type {Mode} from '@/types/mode'
 import {getCombatViewModel as buildCombat} from '@/lib/utils/combatViewModel'
 import {getStatPercentage, getSkillColor} from '@/lib/utils/stats'
 import type {ItemDto} from '@/types/item'
-import {createCharacterAction, updateCharacterAction} from '@/serverFunctions/characterFunctions'
+import {createCharacterAction, deleteCharacterAction, updateCharacterAction} from '@/serverFunctions/characterFunctions'
 import {serializeFormData} from '@/lib/serializeFormData'
 import {useActionState, useTransition} from 'react'
 import {useRouter} from 'next/navigation'
@@ -97,6 +97,7 @@ export function CharacterSheet({character, items, mode, onBack, onEditClick}: Ch
 
   const [createCharacterState, createCharacterFormAction] = useActionState(createCharacterAction, {success: false})
   const [updateCharacterState, updateCharacterFormAction] = useActionState(updateCharacterAction, {success: false})
+  const [deleteCharacterState, deleteCharacterFormAction] = useActionState(deleteCharacterAction, {success: false})
 
 
   const form = useForm<CharacterFormValues>({
@@ -105,6 +106,7 @@ export function CharacterSheet({character, items, mode, onBack, onEditClick}: Ch
   })
 
   const [isPending, startTransition] = useTransition()
+  const [isDeletePending, startDeleteTransition] = useTransition()
   const [successMessage, setSuccessMessage] = React.useState<string | null>(null)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
@@ -151,6 +153,46 @@ export function CharacterSheet({character, items, mode, onBack, onEditClick}: Ch
       setSuccessMessage(null)
     }
   }, [updateCharacterState, mode, router])
+
+  React.useEffect(() => {
+    if (mode !== 'view') {
+      return
+    }
+
+    if (deleteCharacterState.success) {
+      setSuccessMessage('Character deleted successfully!')
+      setErrorMessage(null)
+      setTimeout(() => {
+        router.refresh()
+        router.push('/characters')
+      }, 400)
+      return
+    }
+
+    const serverError = getFirstValidationMessage(deleteCharacterState.errors)
+    if (serverError) {
+      setErrorMessage(serverError)
+      setSuccessMessage(null)
+    }
+  }, [deleteCharacterState, mode, router])
+
+  const handleDelete = () => {
+    if (!character.id) {
+      setErrorMessage('Missing character id, unable to delete.')
+      return
+    }
+
+    if (!window.confirm('Delete this character permanently? This cannot be undone.')) {
+      return
+    }
+
+    setSuccessMessage(null)
+    setErrorMessage(null)
+
+    startDeleteTransition(() => {
+      deleteCharacterFormAction(serializeFormData({id: character.id}))
+    })
+  }
 
   const handleSubmit = (data: CharacterFormValues) => {
     setSuccessMessage(null)
@@ -290,9 +332,15 @@ export function CharacterSheet({character, items, mode, onBack, onEditClick}: Ch
                 </div>
 
                 {!isEditable ? (
-                  <Button onClick={onEditClick} type="button">
-                    Edit Character
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button onClick={onEditClick} type="button">
+                      Edit Character
+                    </Button>
+                    <Button variant="destructive" type="button" onClick={handleDelete} disabled={isDeletePending}>
+                      <Trash2 className="w-4 h-4" />
+                      {isDeletePending ? 'Deleting...' : 'Delete'}
+                    </Button>
+                  </div>
                 ) : (
                   <Button type="submit" disabled={isPending}>
                     {isPending ? 'Saving...' : mode === 'create' ? 'Create Character' : 'Save Changes'}

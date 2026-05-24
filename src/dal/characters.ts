@@ -163,3 +163,9 @@ export async function updateCharacter(id: string, data: CharacterFormValues) {
     data: transformedData,
   })
 }
+
+export async function deleteCharacter(id: string) {
+  return prismaClient.character.delete({
+    where: {id},
+  })
+}

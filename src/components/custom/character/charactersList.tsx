@@ -1,14 +1,19 @@
 'use client'
 
+import React from 'react'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {Badge} from '@/components/ui/badge'
-import {Plus, MoreVertical, Heart, Brain, Zap} from 'lucide-react'
+import {Plus, MoreVertical} from 'lucide-react'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
 import {useRouter} from 'next/navigation'
-import React from 'react'
 import {deriveStatusFromStats, type EntityStatus} from '@/components/custom/shared/status.logic'
 import {StatBar} from '@/components/custom/shared/statBar'
+import {deleteCharacterAction} from '@/serverFunctions/characterFunctions'
+import {serializeFormData} from '@/lib/serializeFormData'
+import {useActionState, useTransition} from 'react'
+import {Alert, AlertDescription} from '@/components/ui/alert'
+import {AlertCircle, CheckCircle, Heart, Brain, Zap} from 'lucide-react'
 
 interface CharactersClientProps {
   characters: {
@@ -30,7 +35,42 @@ interface CharactersClientProps {
 
 export default function CharactersList({characters}: CharactersClientProps) {
   const router = useRouter()
+  const [deleteState, deleteCharacterFormAction] = useActionState(deleteCharacterAction, {success: false})
+  const [isDeletePending, startDeleteTransition] = useTransition()
+  const [deletingId, setDeletingId] = React.useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = React.useState<string | null>(null)
 
+  React.useEffect(() => {
+    if (deleteState.success) {
+      setSuccessMessage('Character deleted successfully.')
+      setErrorMessage(null)
+      setDeletingId(null)
+      router.refresh()
+      return
+    }
+
+    const serverError = deleteState.errors?.errors?.[0]
+    if (serverError) {
+      setErrorMessage(serverError)
+      setSuccessMessage(null)
+      setDeletingId(null)
+    }
+  }, [deleteState, router])
+
+  const handleDelete = (id: string) => {
+    if (!window.confirm('Delete this character permanently? This cannot be undone.')) {
+      return
+    }
+
+    setErrorMessage(null)
+    setSuccessMessage(null)
+    setDeletingId(id)
+
+    startDeleteTransition(() => {
+      deleteCharacterFormAction(serializeFormData({id}))
+    })
+  }
 
   const getStatusColor = (status: EntityStatus) => {
     switch (status) {
@@ -56,6 +96,20 @@ export default function CharactersList({characters}: CharactersClientProps) {
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8">
+        {successMessage && (
+          <Alert className="mb-6 border-green-500 bg-green-50">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <AlertDescription className="text-green-800">{successMessage}</AlertDescription>
+          </Alert>
+        )}
+
+        {errorMessage && (
+          <Alert className="mb-6 border-red-500 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800">{errorMessage}</AlertDescription>
+          </Alert>
+        )}
+
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -92,7 +146,12 @@ export default function CharactersList({characters}: CharactersClientProps) {
                         </DropdownMenuItem>
                         <DropdownMenuItem>Duplicate</DropdownMenuItem>
                         <DropdownMenuItem>Export PDF</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          disabled={isDeletePending && deletingId === character.id}
+                          onClick={() => handleDelete(character.id)}>
+                          {isDeletePending && deletingId === character.id ? 'Deleting...' : 'Delete'}
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
