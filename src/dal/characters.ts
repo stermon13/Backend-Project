@@ -1,5 +1,5 @@
 import {prismaClient} from './prismaClient'
-import {type CharacterFormValues, updateCharacteristicsSchema} from '@/schemas/character.schema'
+import {characteristicsSchema, type CharacterFormValues} from '@/schemas/character.schema'
 
 /**
  * Create a new character in the database
@@ -58,9 +58,15 @@ export async function createCharacter(data: CharacterFormValues) {
 
 
 export async function updateCharacter(id: string, data: CharacterFormValues) {
-  const validatedCharacteristics = updateCharacteristicsSchema.parse(data.characteristics)
+  const validatedCharacteristics = characteristicsSchema.parse(data.characteristics)
 
-  console.log('Validated Characteristics:', validatedCharacteristics.characteristics)
+  console.log('Validated Characteristics:', validatedCharacteristics)
+
+  const existingSkills = (data.skills ?? []).filter(skill => skill.id !== 'new')
+  const existingPossessions = (data.possessions ?? []).filter(possession => possession.id !== 'new')
+  const newPossessions = (data.possessions ?? []).filter(possession => possession.id === 'new')
+  const existingContacts = (data.contacts ?? []).filter(contact => contact.id !== 'new')
+  const newContacts = (data.contacts ?? []).filter(contact => contact.id === 'new')
 
   const transformedData = {
     name: data.name,
@@ -77,23 +83,23 @@ export async function updateCharacter(id: string, data: CharacterFormValues) {
 
     characteristics: {
       update: {
-        strength: {set: validatedCharacteristics.characteristics.strength},
-        constitution: {set: validatedCharacteristics.characteristics.constitution},
-        size: {set: validatedCharacteristics.characteristics.size},
-        dexterity: {set: validatedCharacteristics.characteristics.dexterity},
-        appearance: {set: validatedCharacteristics.characteristics.appearance},
-        intelligence: {set: validatedCharacteristics.characteristics.intelligence},
-        power: {set: validatedCharacteristics.characteristics.power},
-        education: {set: validatedCharacteristics.characteristics.education},
+        strength: {set: validatedCharacteristics.strength},
+        constitution: {set: validatedCharacteristics.constitution},
+        size: {set: validatedCharacteristics.size},
+        dexterity: {set: validatedCharacteristics.dexterity},
+        appearance: {set: validatedCharacteristics.appearance},
+        intelligence: {set: validatedCharacteristics.intelligence},
+        power: {set: validatedCharacteristics.power},
+        education: {set: validatedCharacteristics.education},
       },
     },
 
     derivedStats: {update: data.derivedStats},
 
     skills:
-      data.skills && Array.isArray(data.skills)
+      existingSkills.length > 0
         ? {
-            update: data.skills.map((skill: {id: string; value: number}) => ({
+            update: existingSkills.map(skill => ({
               where: {id: skill.id},
               data: {value: skill.value},
             })),
@@ -101,22 +107,51 @@ export async function updateCharacter(id: string, data: CharacterFormValues) {
         : undefined,
 
     possessions:
-      data.possessions && Array.isArray(data.possessions)
+      existingPossessions.length > 0 || newPossessions.length > 0
         ? {
-            update: data.possessions.map((possession: {id: string; quantity: number}) => ({
-              where: {id: possession.id},
-              data: {quantity: possession.quantity},
-            })),
+            ...(existingPossessions.length > 0
+              ? {
+                  update: existingPossessions.map(possession => ({
+                    where: {id: possession.id},
+                    data: {quantity: possession.quantity},
+                  })),
+                }
+              : {}),
+            ...(newPossessions.length > 0
+              ? {
+                  create: newPossessions.map(possession => ({
+                    itemId: possession.itemId,
+                    quantity: possession.quantity,
+                  })),
+                }
+              : {}),
           }
         : undefined,
 
     contacts:
-      data.contacts && Array.isArray(data.contacts)
+      existingContacts.length > 0 || newContacts.length > 0
         ? {
-            update: data.contacts.map((contact: {id: string; description?: string}) => ({
-              where: {id: contact.id},
-              data: {description: contact.description ?? ''},
-            })),
+            ...(existingContacts.length > 0
+              ? {
+                  update: existingContacts.map(contact => ({
+                    where: {id: contact.id},
+                    data: {
+                      name: contact.name,
+                      relationship: contact.relationship,
+                      description: contact.description ?? '',
+                    },
+                  })),
+                }
+              : {}),
+            ...(newContacts.length > 0
+              ? {
+                  create: newContacts.map(contact => ({
+                    name: contact.name,
+                    relationship: contact.relationship,
+                    description: contact.description ?? '',
+                  })),
+                }
+              : {}),
           }
         : undefined,
   }

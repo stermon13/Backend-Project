@@ -5,35 +5,28 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/compo
 import {Badge} from '@/components/ui/badge'
 import {Plus, Calendar, Users, BookOpen, MoreVertical} from 'lucide-react'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
-import {redirect, useRouter} from 'next/navigation'
+import {useRouter} from 'next/navigation'
 import type {CampaignDto, CampaignStatus} from '@/types/campaign'
+import {serializeFormData} from '@/lib/serializeFormData'
+import type {FormAction} from '@/models/serverFunctions'
 
 type Props = {
   campaigns: CampaignDto[]
   role: 'User' | 'Keeper' | 'Admin'
+  deleteAction: FormAction<void>
 }
 
-export default function CampaignsClient({campaigns, role}: Props) {
+export default function CampaignsClient({campaigns, role, deleteAction}: Props) {
   const router = useRouter()
 
   const onDelete = async (campaignId: string) => {
     try {
-      const response = await fetch('/api/campaign/delete', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({campaignId}),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        redirect('/dashboard')
-      } else {
-        console.error('Error deleting campaign:', data.message)
-      }
+      await deleteAction({success: true}, serializeFormData({id: campaignId}))
     } catch (error) {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+        throw error
+      }
+
       console.error('Error:', error)
     }
   }

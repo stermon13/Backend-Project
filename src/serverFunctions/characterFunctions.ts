@@ -2,15 +2,19 @@
 
 import {createCharacter, updateCharacter} from '@/dal/characters'
 import {createCharacterSchema, updateCharacterSchema} from '@/schemas/character.schema'
-import {publicFormAction, protectedFormAction} from '@/lib/serverFunctions'
+import {protectedFormAction} from '@/lib/serverFunctions'
 
 
-export const createCharacterAction = publicFormAction({
+export const createCharacterAction = protectedFormAction({
   schema: createCharacterSchema,
-  serverFn: async ({data, logger}) => {
-    console.log('Data received in serverFn:', data)
+  serverFn: async ({data, logger, profile}) => {
+    if (!profile) {
+      logger.error('No authenticated profile found while creating character')
+      return {success: false, errors: {errors: ['Authentication required']}}
+    }
+
     try {
-      const character = await createCharacter(data)
+      const character = await createCharacter({...data, userId: profile.id})
       logger.info(`Character created successfully: ${character.id}`)
 
       return {success: true}

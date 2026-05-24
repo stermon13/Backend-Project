@@ -1,6 +1,7 @@
 'use client'
 
-import {FormProvider, useForm, useWatch, useFieldArray} from 'react-hook-form'
+import React from 'react'
+import {FormProvider, useForm, useWatch, useFieldArray, type FieldErrors, type Resolver} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardHeader, CardTitle, CardDescription} from '@/components/ui/card'
@@ -12,7 +13,12 @@ import {Progress} from '@/components/ui/progress'
 import {Label} from '@/components/ui/label'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
 import {ArrowLeft, Skull, Brain, Heart, Zap, Plus, MoreVertical} from 'lucide-react'
-import {characterSchema, type CharacterFormValues, type CharacterFormResolved} from '@/schemas/character.schema'
+import {
+  characterSchema,
+  createCharacterSchema,
+  type CharacterFormValues,
+  type CharacterFormResolved,
+} from '@/schemas/character.schema'
 import type {CharacterWithRelations} from '@/types/character'
 import {
   StatField,
@@ -30,7 +36,11 @@ import {getCombatViewModel as buildCombat} from '@/lib/utils/combatViewModel'
 import {getStatPercentage, getSkillColor} from '@/lib/utils/stats'
 import type {ItemDto} from '@/types/item'
 import {createCharacterAction, updateCharacterAction} from '@/serverFunctions/characterFunctions'
+import {serializeFormData} from '@/lib/serializeFormData'
 import {useActionState, useTransition} from 'react'
+import {useRouter} from 'next/navigation'
+import {AlertCircle, CheckCircle} from 'lucide-react'
+import {Alert, AlertDescription} from '@/components/ui/alert'
 
 interface CharacterSheetProps {
   character: CharacterWithRelations
@@ -42,48 +52,110 @@ interface CharacterSheetProps {
 }
 
 
-function convertToFormData(data: CharacterFormValues): FormData {
-  const formData = new FormData()
-  console.log('Data before converting to FormData:', data)
+// Use the standard serializer which produces dotted paths compatible with convertFormData on the server
+// (e.g. "characteristics.strength", "possessions.0.item.name", etc.)
+// This ensures Zod validation receives the expected object shape.
 
-  const isObject = (value: unknown) => value !== null && typeof value === 'object' && !Array.isArray(value)
 
-  for (const [key, value] of Object.entries(data)) {
-    console.log(key, value)
+function getFirstValidationMessage(errors: unknown): string | null {
+  if (!errors || typeof errors !== 'object') {
+    return null
+  }
 
-    if (isObject(value)) {
-      formData.append(key, JSON.stringify(value))
-    } else if (Array.isArray(value)) {
-      formData.append(key, JSON.stringify(value))
-    } else {
-      formData.append(key, JSON.stringify(value))
+  const queue: unknown[] = [errors]
+
+  while (queue.length > 0) {
+    const current = queue.shift()
+
+    if (!current || typeof current !== 'object') {
+      continue
+    }
+
+    // RHF field error shape
+    if ('message' in current && typeof (current as {message?: unknown}).message === 'string') {
+      return (current as {message: string}).message
+    }
+
+    for (const value of Object.values(current as Record<string, unknown>)) {
+      // server action error shape: {errors: string[]}
+      if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'string') {
+        return value[0]
+      }
+
+      if (value && typeof value === 'object') {
+        queue.push(value)
+      }
     }
   }
 
-  for (const [key, value] of formData.entries()) {
-    console.log(`FormData Entry: ${key} = ${JSON.stringify(value)}`)
-  }
-  return formData
+  return null
 }
-
 
 export function CharacterSheet({character, items, mode, onBack, onEditClick}: CharacterSheetProps) {
   const isEditable = mode !== 'view'
+  const router = useRouter()
 
   const [createCharacterState, createCharacterFormAction] = useActionState(createCharacterAction, {success: false})
   const [updateCharacterState, updateCharacterFormAction] = useActionState(updateCharacterAction, {success: false})
 
 
   const form = useForm<CharacterFormValues>({
-    resolver: zodResolver(characterSchema),
+    resolver: zodResolver(mode === 'create' ? createCharacterSchema : characterSchema) as unknown as Resolver<CharacterFormValues>,
     defaultValues: characterToForm(character),
   })
 
   const [isPending, startTransition] = useTransition()
+  const [successMessage, setSuccessMessage] = React.useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+
+  // Watch the state from the server actions
+  React.useEffect(() => {
+    if (mode !== 'create') {
+      return
+    }
+
+    if (createCharacterState.success) {
+      setSuccessMessage('Character created successfully!')
+      setErrorMessage(null)
+      setTimeout(() => {
+        router.refresh()
+        router.push('/characters')
+      }, 500)
+      return
+    }
+
+    const serverError = getFirstValidationMessage(createCharacterState.errors)
+    if (serverError) {
+      setErrorMessage(serverError)
+      setSuccessMessage(null)
+    }
+  }, [createCharacterState, mode, router])
+
+  React.useEffect(() => {
+    if (mode !== 'edit') {
+      return
+    }
+
+    if (updateCharacterState.success) {
+      setSuccessMessage('Character updated successfully!')
+      setErrorMessage(null)
+      setTimeout(() => {
+        router.refresh()
+      }, 500)
+      return
+    }
+
+    const serverError = getFirstValidationMessage(updateCharacterState.errors)
+    if (serverError) {
+      setErrorMessage(serverError)
+      setSuccessMessage(null)
+    }
+  }, [updateCharacterState, mode, router])
 
   const handleSubmit = (data: CharacterFormValues) => {
-    const formData = convertToFormData(data)
-    console.log('Form Data:', formData)
+    setSuccessMessage(null)
+    setErrorMessage(null)
+    const formData = serializeFormData(data)
     startTransition(() => {
       if (mode === 'create') {
         createCharacterFormAction(formData)
@@ -91,6 +163,11 @@ export function CharacterSheet({character, items, mode, onBack, onEditClick}: Ch
         updateCharacterFormAction(formData)
       }
     })
+  }
+
+  const handleInvalidSubmit = (errors: FieldErrors<CharacterFormValues>) => {
+    setSuccessMessage(null)
+    setErrorMessage(getFirstValidationMessage(errors) ?? 'Please fix the highlighted form fields and try again.')
   }
 
   const {append, remove} = useFieldArray({
@@ -136,6 +213,34 @@ export function CharacterSheet({character, items, mode, onBack, onEditClick}: Ch
   const content = (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8">
+        {/* Status Messages */}
+        {isPending && (
+          <Alert className="mb-6 border-blue-500 bg-blue-50">
+            <Zap className="h-4 w-4 text-blue-600" />
+            <AlertDescription className="text-blue-800">
+              Saving your changes...
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {successMessage && (
+          <Alert className="mb-6 border-green-500 bg-green-50">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <AlertDescription className="text-green-800">
+              {successMessage}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {errorMessage && (
+          <Alert className="mb-6 border-red-500 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800">
+              {errorMessage}
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <Button variant="ghost" className="mb-4 gap-2" onClick={onBack} type="button">
@@ -189,7 +294,9 @@ export function CharacterSheet({character, items, mode, onBack, onEditClick}: Ch
                     Edit Character
                   </Button>
                 ) : (
-                  <Button type="submit">{mode === 'create' ? 'Create Character' : 'Save Changes'}</Button>
+                  <Button type="submit" disabled={isPending}>
+                    {isPending ? 'Saving...' : mode === 'create' ? 'Create Character' : 'Save Changes'}
+                  </Button>
                 )}
               </div>
 
@@ -742,8 +849,7 @@ export function CharacterSheet({character, items, mode, onBack, onEditClick}: Ch
   return (
     <FormProvider {...form}>
       {isEditable ? (
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          {isPending && <div className="loading-spinner">Saving...</div>}
+        <form onSubmit={form.handleSubmit(handleSubmit, handleInvalidSubmit)}>
           {content}
         </form>
       ) : (

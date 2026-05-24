@@ -3,6 +3,7 @@ import type {CharacterFormValues} from '@/schemas/character.schema'
 
 export function characterToForm(character: CharacterWithRelations): CharacterFormValues {
   return {
+    id: character.id,
     name: character.name,
     occupation: character.occupation,
     age: character.age,
@@ -49,7 +50,7 @@ export function characterToForm(character: CharacterWithRelations): CharacterFor
     })),
 
     possessions: character.possessions.map(p => ({
-      id: 'new',
+      id: p.id,
       itemId: p.itemId,
       quantity: p.quantity ?? 1,
       item: {

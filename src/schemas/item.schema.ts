@@ -8,14 +8,11 @@ export const itemBaseSchema = z.object({
   weight: z.string().min(1, 'Weight is required'),
   damage: z.string().optional(),
   range: z.string().optional(),
-  attacks: z.number().optional(),
-  ammo: z.number().optional(),
+  attacks: z.preprocess(value => (value === '' || value === null || value === undefined ? undefined : Number(value)), z.number().optional()),
+  ammo: z.preprocess(value => (value === '' || value === null || value === undefined ? undefined : Number(value)), z.number().optional()),
 })
 
-export const updateItemSchema = itemBaseSchema.omit({
-  name: true,
-  category: true,
-})
+export const updateItemSchema = itemBaseSchema
 
 export const createItemSchema = itemBaseSchema
   .refine(

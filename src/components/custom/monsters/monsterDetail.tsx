@@ -5,7 +5,6 @@ import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card'
 import {Badge} from '@/components/ui/badge'
 import {ArrowLeft, Edit, Trash2} from 'lucide-react'
 import Link from 'next/link'
-import {useRouter} from 'next/navigation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +25,6 @@ type Props = {
 }
 
 export default function MonsterDetailClient({monster}: Props) {
-  const router = useRouter()
 
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -48,7 +46,7 @@ export default function MonsterDetailClient({monster}: Props) {
   }
 
   const handleDelete = async () => {
-    await deleteMonsterAction(monster.id)
+    await deleteMonsterAction({id: monster.id})
   }
 
 

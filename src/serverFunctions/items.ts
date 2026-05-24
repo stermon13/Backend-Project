@@ -1,39 +1,41 @@
-import {type Item} from '@/generated/prisma/client'
-import {prismaClient} from '@/dal/prismaClient'
+'use server'
 
-interface CreateItemInput {
-  name: string
-  category: string
-  description: string
-  value: string
-  weight: string
-  damage?: string
-  range?: string
-  attacks?: number
-  ammo?: number
-}
+import {z} from 'zod'
+import {createItem, deleteItem, updateItem} from '@/dal/items'
+import {createItemSchema, updateItemSchema} from '@/schemas/item.schema'
+import {revalidatePath} from 'next/cache'
+import {protectedFormAction} from '@/lib/serverFunctions'
 
-export async function GetAllItems(): Promise<Item[]> {
-  return prismaClient.item.findMany()
-}
+export const createItemAction = protectedFormAction({
+  schema: createItemSchema,
+  requiredRoles: ['Admin', 'Keeper'],
+  functionName: 'Create item action',
+  globalErrorMessage: 'We could not create the item. Please try again.',
+  serverFn: async ({data}) => {
+    await createItem(data)
+    revalidatePath('/items')
+  },
+})
 
-export async function CreateItem(data: CreateItemInput) {
-  return prismaClient.item.create({data})
-}
+export const updateItemAction = protectedFormAction({
+  schema: updateItemSchema.extend({id: z.string().min(1)}),
+  requiredRoles: ['Admin', 'Keeper'],
+  functionName: 'Update item action',
+  globalErrorMessage: 'We could not update the item. Please try again.',
+  serverFn: async ({data}) => {
+    const {id, ...itemData} = data
+    await updateItem(id, itemData)
+    revalidatePath('/items')
+  },
+})
 
-export async function UpdateItem(id: string, data: Partial<CreateItemInput>) {
-  return prismaClient.item.update({where: {id}, data})
-}
-
-export async function DeleteItem(id: string) {
-  try {
-    return await prismaClient.item.delete({
-      where: {
-        id: id,
-      },
-    })
-  } catch (error) {
-    console.error('Prisma Error on DELETE:', error)
-    throw error
-  }
-}
+export const deleteItemAction = protectedFormAction({
+  schema: z.object({id: z.string().min(1)}),
+  requiredRoles: ['Admin', 'Keeper'],
+  functionName: 'Delete item action',
+  globalErrorMessage: 'We could not delete the item. Please try again.',
+  serverFn: async ({data}) => {
+    await deleteItem(data.id)
+    revalidatePath('/items')
+  },
+})

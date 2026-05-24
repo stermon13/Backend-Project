@@ -7,8 +7,8 @@ const locationSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
   InvestigationSessionId: z.string(),
-  createdAt: z.date,
-  updatedAt: z.date,
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
 export {locationSchema}
@@ -16,13 +16,13 @@ export {locationSchema}
 const investigationSessionSchema = z.object({
   id: z.string(),
   title: z.string().min(1),
-  date: z.date,
+  date: z.coerce.date(),
   campaign: z.string().min(1),
-  sessionNumber: z.number().int().positive(),
+  sessionNumber: z.coerce.number().int().positive(),
   summary: z.string().min(1),
   details: z.string().min(1),
-  createdAt: z.date,
-  updatedAt: z.date,
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   clues: z.array(clueSchema),
   locations: z.array(locationSchema),
   npcs: z.array(characterSchema),

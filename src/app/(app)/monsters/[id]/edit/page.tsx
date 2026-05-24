@@ -231,12 +231,13 @@ export default async function EditMonsterPage({params}: {params: Promise<{id: st
   return (
     <MonsterForm
       submitLabel="Save Changes"
+      monsterId={monster.id}
       defaultValues={{
         ...monster,
         spellIds: (monster.spells ?? []).map(s => s.id),
       }}
       spells={spells}
-      action={updateMonsterAction.bind(null, monster.id)}
+      action={updateMonsterAction}
     />
   )
 }

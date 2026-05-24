@@ -1,33 +1,54 @@
 import {z} from 'zod'
 
+const intPositive = z.coerce.number().int().positive()
+const intNonNegative = z.coerce.number().int().nonnegative()
+const intPercentage = z.coerce.number().int().min(0).max(100)
+const checkboxBoolean = z.preprocess(value => {
+  if (typeof value === 'boolean') {
+    return value
+  }
+
+  if (typeof value === 'string') {
+    if (value === 'true' || value === 'on') {
+      return true
+    }
+
+    if (value === 'false') {
+      return false
+    }
+  }
+
+  return value
+}, z.boolean())
+
 export const characteristicsSchema = z.object({
-  strength: z.number().int().positive(),
-  constitution: z.number().int().positive(),
-  size: z.number().int().positive(),
-  dexterity: z.number().int().positive(),
-  appearance: z.number().int().positive(),
-  intelligence: z.number().int().positive(),
-  power: z.number().int().positive(),
-  education: z.number().int().positive(),
+  strength: intPositive,
+  constitution: intPositive,
+  size: intPositive,
+  dexterity: intPositive,
+  appearance: intPositive,
+  intelligence: intPositive,
+  power: intPositive,
+  education: intPositive,
 })
 
 export const derivedStatsSchema = z.object({
-  hitPointsCurrent: z.number().int().positive(),
-  hitPointsMax: z.number().int().positive(),
-  sanityCurrent: z.number().int().positive(),
-  sanityMax: z.number().int().positive(),
-  magicPointsCurrent: z.number().int().positive(),
-  magicPointsMax: z.number().int().positive(),
-  luck: z.number().int().positive(),
-  movement: z.number().int().positive(),
-  build: z.number().int().positive(),
+  hitPointsCurrent: intPositive,
+  hitPointsMax: intPositive,
+  sanityCurrent: intPositive,
+  sanityMax: intPositive,
+  magicPointsCurrent: intPositive,
+  magicPointsMax: intPositive,
+  luck: intPositive,
+  movement: intPositive,
+  build: intNonNegative,
   damageBonus: z.string(),
 })
 
 export const characterSkillFormSchema = z.object({
   id: z.string(),
   skillId: z.string(),
-  value: z.number().int().min(0).max(100),
+  value: intPercentage,
   skill: z.object({
     id: z.string(),
     name: z.string(),
@@ -38,7 +59,7 @@ export const characterSkillFormSchema = z.object({
 export const characterPossessionFormSchema = z.object({
   id: z.string(),
   itemId: z.string(),
-  quantity: z.number().int().min(1).positive(),
+  quantity: intPositive,
   item: z.object({
     id: z.string(),
     name: z.string(),
@@ -48,10 +69,10 @@ export const characterPossessionFormSchema = z.object({
     weight: z.string(),
     damage: z.string().optional(),
     range: z.string().optional(),
-    attacks: z.number().int().positive().optional(),
-    ammo: z.number().int().positive().optional(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    attacks: intPositive.optional(),
+    ammo: intPositive.optional(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
   }),
 })
 
@@ -66,11 +87,11 @@ export const characterSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1),
   occupation: z.string().min(1),
-  age: z.number().int().min(0).positive(),
+  age: intPositive,
   sex: z.string().min(1),
   residence: z.string().min(1),
   birthplace: z.string().min(1),
-  isNpc: z.boolean(),
+  isNpc: checkboxBoolean,
   portraitUrl: z.string().default(''),
   campaignName: z.string().default(''),
 
@@ -95,11 +116,13 @@ export const characterSchema = z.object({
   userId: z.string(),
 })
 
-export type CharacterFormValues = z.input<typeof characterSchema>
+export type CharacterFormValues = z.output<typeof characterSchema>
 export type CharacterFormResolved = z.output<typeof characterSchema>
 
 
-export const createCharacterSchema = characterSchema
+export const createCharacterSchema = characterSchema.omit({
+  userId: true,
+})
 
 export const updateCharacterSchema = characterSchema.extend({
   id: z.uuid({message: 'Invalid UUID'}),

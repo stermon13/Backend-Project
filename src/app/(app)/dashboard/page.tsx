@@ -2,6 +2,7 @@ import {redirect} from 'next/navigation'
 import {getSessionFromCookie} from '@/lib/sessionUtils'
 import {proxyGetCampaignsForUser} from '@/proxy/campaigns'
 import CampaignsClient from '@/components/custom/campaigns/campaignsList'
+import {deleteCampaignAction} from '@/serverFunctions/campaignFunctions'
 
 export default async function CampaignsPage() {
   const session = await getSessionFromCookie(true)
@@ -19,6 +20,6 @@ export default async function CampaignsPage() {
   })
 
 
-  return <CampaignsClient campaigns={campaigns} role={session.user.role} />
+  return <CampaignsClient campaigns={campaigns} role={session.user.role} deleteAction={deleteCampaignAction} />
 }
 

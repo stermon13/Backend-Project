@@ -1,5 +1,5 @@
 import {getSessionFromCookie} from '@/lib/sessionUtils'
-import {GetAllItems} from '@/serverFunctions/items'
+import {getAllItems} from '@/dal/items'
 import type {ItemDto, ItemCategory} from '@/types/item'
 import {nullToUndefined} from '@/lib/utils/normalize'
 
@@ -14,7 +14,7 @@ export async function proxyGetAllItems(): Promise<ItemDto[]> {
     throw new Error('Forbidden')
   }
 
-  const items = await GetAllItems()
+  const items = await getAllItems()
 
   return items.map(item => ({
     id: item.id,

@@ -1,23 +1,15 @@
 "use client"
 
-import { useState , useEffect} from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Plus, Edit, Trash2, Package } from "lucide-react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {useMemo, useState} from 'react'
+import {Package, Plus, Edit, Trash2} from 'lucide-react'
+import {Button} from '@/components/ui/button'
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog'
+import {Input} from '@/components/ui/input'
+import {Label} from '@/components/ui/label'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
+import {Textarea} from '@/components/ui/textarea'
+import {Badge} from '@/components/ui/badge'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,120 +22,52 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import type {ItemDto} from '@/types/item'
+import {serializeFormData} from '@/lib/serializeFormData'
+import type {FormAction} from '@/models/serverFunctions'
+import {useRouter} from 'next/navigation'
 
 type Props = {
   items: ItemDto[]
+  createAction: FormAction<void>
+  updateAction: FormAction<void>
+  deleteAction: FormAction<void>
 }
 
 type ItemFormData = Omit<ItemDto, 'id' | 'createdAt' | 'updatedAt'>
 
-export default function ItemsClient({items: initialItems}: Props) {
-  const [items, setItems] = useState(initialItems)
+const emptyFormData: ItemFormData = {
+  name: '',
+  category: 'equipment',
+  description: '',
+  value: '',
+  weight: '',
+  damage: '',
+  range: '',
+  attacks: 0,
+  ammo: 0,
+}
+
+export default function ItemsClient({items, createAction, updateAction, deleteAction}: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ItemDto | null>(null)
-  const [formData, setFormData] = useState<ItemFormData>({
-    name: '',
-    category: 'equipment',
-    description: '',
-    value: '',
-    weight: '',
-    damage: '',
-    range: '',
-    attacks: 0,
-    ammo: 0,
-  })
-
-
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [formData, setFormData] = useState<ItemFormData>(emptyFormData)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const router = useRouter()
 
-  const handleAddItem = async () => {
-    const newItem = {...formData}
-    console.info('Form data being sent:', newItem)
-
-    try {
-      const response = await fetch('/api/items', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newItem),
-      })
-      if (response.ok) {
-        const createdItem = (await response.json()) as ItemDto
-        setItems([...items, createdItem])
-        setIsDialogOpen(false)
-        resetForm()
-        console.info(`Created new item: ${createdItem.name}`)
-      } else {
-        console.error('Failed to create item')
-      }
-    } catch (error) {
-      console.error('Error creating item:', error)
-    }
-  }
-
-  const handleEditItem = async () => {
-    if (!editingItem) return
-
-    const updatedItem = {...editingItem, ...formData}
-    console.info('Editing item:', updatedItem)
-
-    try {
-      const response = await fetch(`/api/items`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedItem),
-      })
-      if (response.ok) {
-        const updatedItemData = (await response.json()) as ItemDto
-        setItems(items.map(item => (item.id === updatedItemData.id ? updatedItemData : item)))
-        setEditingItem(null)
-        setIsDialogOpen(false)
-        resetForm()
-        console.info(`Updated item: ${updatedItemData.name}`)
-      } else {
-        console.error('Failed to update item')
-      }
-    } catch (error) {
-      console.error('Error updating item:', error)
-    }
-  }
-
-  const handleDeleteItem = async (id: string) => {
-    try {
-      const response = await fetch('/api/items', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({id}),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to delete item')
-      }
-
-      setItems(prev => prev.filter(item => item.id !== id))
-      console.info(`Deleted item with id: ${id}`)
-    } catch (error) {
-      console.error('Error deleting item:', error)
-    }
-  }
+  const visibleItems = useMemo(() => {
+    if (selectedCategory === 'all') return items
+    return items.filter(item => item.category === selectedCategory)
+  }, [items, selectedCategory])
 
   const resetForm = () => {
-    setFormData({
-      name: '',
-      category: 'equipment',
-      description: '',
-      value: '',
-      weight: '',
-      damage: '',
-      range: '',
-      attacks: 0,
-      ammo: 0,
-    })
+    setFormData(emptyFormData)
+  }
+
+  const openAddDialog = () => {
+    setEditingItem(null)
+    resetForm()
+    setIsDialogOpen(true)
   }
 
   const openEditDialog = (item: ItemDto) => {
@@ -154,8 +78,52 @@ export default function ItemsClient({items: initialItems}: Props) {
       description: item.description,
       value: item.value,
       weight: item.weight,
+      damage: item.damage ?? '',
+      range: item.range ?? '',
+      attacks: item.attacks ?? 0,
+      ammo: item.ammo ?? 0,
     })
     setIsDialogOpen(true)
+  }
+
+  const handleSave = async () => {
+    const payload = editingItem ? {...formData, id: editingItem.id} : formData
+    const action = editingItem ? updateAction : createAction
+
+    try {
+      setErrorMessage(null)
+      const result = await action({success: true}, serializeFormData(payload))
+
+      if (!result.success) {
+        setErrorMessage(result.errors?.errors?.[0] ?? 'Unable to save item.')
+        return
+      }
+
+      setIsDialogOpen(false)
+      setEditingItem(null)
+      resetForm()
+      router.refresh()
+    } catch (error) {
+      console.error('Error saving item:', error)
+      setErrorMessage('Error saving item. Please try again.')
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      setErrorMessage(null)
+      const result = await deleteAction({success: true}, serializeFormData({id}))
+
+      if (!result.success) {
+        setErrorMessage(result.errors?.errors?.[0] ?? 'Unable to delete item.')
+        return
+      }
+
+      router.refresh()
+    } catch (error) {
+      console.error('Error deleting item:', error)
+      setErrorMessage('Error deleting item. Please try again.')
+    }
   }
 
   const getCategoryColor = (category: ItemDto['category']) => {
@@ -175,11 +143,6 @@ export default function ItemsClient({items: initialItems}: Props) {
     }
   }
 
-  const filterByCategory = (category: string) => {
-    if (category === 'all') return items
-    return items.filter(item => item.category === category)
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8">
@@ -188,14 +151,10 @@ export default function ItemsClient({items: initialItems}: Props) {
             <h1 className="text-4xl font-serif font-bold text-foreground mb-2">Item Library</h1>
             <p className="text-muted-foreground">Manage items, equipment, and artifacts for your campaigns</p>
           </div>
+
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button
-                className="gap-2"
-                onClick={() => {
-                  setEditingItem(null)
-                  resetForm()
-                }}>
+              <Button className="gap-2" onClick={openAddDialog}>
                 <Plus className="w-4 h-4" />
                 Add Item
               </Button>
@@ -207,21 +166,16 @@ export default function ItemsClient({items: initialItems}: Props) {
                   {editingItem ? 'Update the item details below.' : 'Add a new item to your library.'}
                 </DialogDescription>
               </DialogHeader>
+
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label>Item Name</Label>
-                  <Input
-                    value={formData.name}
-                    onChange={e => setFormData({...formData, name: e.target.value})}
-                    placeholder="e.g., Flashlight, Revolver, Ancient Tome"
-                  />
+                  <Input value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Category</Label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={value => setFormData({...formData, category: value as ItemDto['category']})}>
+                  <Select value={formData.category} onValueChange={value => setFormData({...formData, category: value as ItemDto['category']})}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -238,94 +192,59 @@ export default function ItemsClient({items: initialItems}: Props) {
 
                 <div className="space-y-2">
                   <Label>Description</Label>
-                  <Textarea
-                    value={formData.description}
-                    onChange={e => setFormData({...formData, description: e.target.value})}
-                    placeholder="Describe the item's appearance, purpose, or special properties..."
-                    rows={3}
-                  />
+                  <Textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} rows={3} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Value</Label>
-                    <Input
-                      value={formData.value}
-                      onChange={e => setFormData({...formData, value: e.target.value})}
-                      placeholder="e.g., $25, Priceless"
-                    />
+                    <Input value={formData.value} onChange={e => setFormData({...formData, value: e.target.value})} />
                   </div>
-
                   <div className="space-y-2">
                     <Label>Weight</Label>
-                    <Input
-                      value={formData.weight}
-                      onChange={e => setFormData({...formData, weight: e.target.value})}
-                      placeholder="e.g., 2 lbs, 0.5 kg"
-                    />
+                    <Input value={formData.weight} onChange={e => setFormData({...formData, weight: e.target.value})} />
                   </div>
                 </div>
 
                 {formData.category === 'weapon' && (
-                  <>
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Damage (Optional)</Label>
-                      <Input
-                        value={formData.damage}
-                        onChange={e => setFormData({...formData, damage: e.target.value})}
-                        placeholder="e.g., 10"
-                      />
+                      <Label>Damage</Label>
+                      <Input value={formData.damage} onChange={e => setFormData({...formData, damage: e.target.value})} />
                     </div>
-
                     <div className="space-y-2">
-                      <Label>Range (Optional)</Label>
-                      <Input
-                        value={formData.range}
-                        onChange={e => setFormData({...formData, range: e.target.value})}
-                        placeholder="e.g., 30 ft"
-                      />
+                      <Label>Range</Label>
+                      <Input value={formData.range} onChange={e => setFormData({...formData, range: e.target.value})} />
                     </div>
-
                     <div className="space-y-2">
-                      <Label>Attacks (Optional)</Label>
-                      <Input
-                        type="number"
-                        value={formData.attacks}
-                        onChange={e => setFormData({...formData, attacks: parseInt(e.target.value)})}
-                        placeholder="e.g., 3"
-                      />
+                      <Label>Attacks</Label>
+                      <Input type="number" value={formData.attacks} onChange={e => setFormData({...formData, attacks: Number(e.target.value)})} />
                     </div>
-
                     <div className="space-y-2">
-                      <Label>Ammo (Optional)</Label>
-                      <Input
-                        type="number"
-                        value={formData.ammo}
-                        onChange={e => setFormData({...formData, ammo: parseInt(e.target.value)})}
-                        placeholder="e.g., 5"
-                      />
+                      <Label>Ammo</Label>
+                      <Input type="number" value={formData.ammo} onChange={e => setFormData({...formData, ammo: Number(e.target.value)})} />
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
 
               <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsDialogOpen(false)
-                    setEditingItem(null)
-                    resetForm()
-                  }}>
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button onClick={editingItem ? handleEditItem : handleAddItem}>
+                <Button type="button" onClick={handleSave}>
                   {editingItem ? 'Save Changes' : 'Add Item'}
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
+
+        {errorMessage && (
+          <div className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {errorMessage}
+          </div>
+        )}
 
         <div className="mb-6">
           <Label className="mb-2 block">Filter by Category</Label>
@@ -346,13 +265,13 @@ export default function ItemsClient({items: initialItems}: Props) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filterByCategory(selectedCategory).length === 0 ? (
+          {visibleItems.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <Package className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
               <p className="text-muted-foreground">No items in this category yet.</p>
             </div>
           ) : (
-            filterByCategory(selectedCategory).map(item => (
+            visibleItems.map(item => (
               <Card key={item.id} className="hover:border-primary/50 transition-colors">
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
@@ -376,7 +295,7 @@ export default function ItemsClient({items: initialItems}: Props) {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteItem(item.id)}>Delete</AlertDialogAction>
+                            <AlertDialogAction onClick={() => handleDelete(item.id)}>Delete</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
@@ -387,12 +306,8 @@ export default function ItemsClient({items: initialItems}: Props) {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <div>
-                      <span className="font-medium">Value:</span> {item.value}
-                    </div>
-                    <div>
-                      <span className="font-medium">Weight:</span> {item.weight}
-                    </div>
+                    <div><span className="font-medium">Value:</span> {item.value}</div>
+                    <div><span className="font-medium">Weight:</span> {item.weight}</div>
                   </div>
                 </CardContent>
               </Card>

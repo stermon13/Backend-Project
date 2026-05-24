@@ -3,13 +3,13 @@ import {z} from 'zod'
 const clueSchema = z.object({
   id: z.string(),
   description: z.string().min(1),
-  discoveredAt: z.date(),
+  discoveredAt: z.coerce.date(),
   discovered: z.string(),
   title: z.string(),
   relatedTo: z.string(),
   InvestigationSessionId: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
 export {clueSchema}

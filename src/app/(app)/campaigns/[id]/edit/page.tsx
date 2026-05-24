@@ -2,6 +2,7 @@ import {redirect} from 'next/navigation'
 import {getSessionFromCookie} from '@/lib/sessionUtils'
 import {proxyGetCampaignById} from '@/proxy/campaigns'
 import CampaignForm from '@/components/custom/campaigns/campaignForm'
+import {updateCampaignAction} from '@/serverFunctions/campaignFunctions'
 
 export default async function CampaignEditPage({params}: {params: Promise<{id: string}>}) {
   const {id} = await params
@@ -22,6 +23,7 @@ export default async function CampaignEditPage({params}: {params: Promise<{id: s
       defaultValues={campaign}
       submitLabel="Update Campaign"
       isEditMode={true}
+      action={updateCampaignAction}
     />
   )
 }

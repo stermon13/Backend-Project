@@ -1,6 +1,6 @@
 'use client'
 
-import {Controller, useForm} from 'react-hook-form'
+import {Controller, useForm, useWatch, type Resolver} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
@@ -15,16 +15,19 @@ import {useRouter} from 'next/navigation'
 import type {CampaignFormValues, CampaignStatus} from '@/types/campaign'
 import {getStatPercentage} from '@/lib/utils/stats'
 import {Eye} from 'lucide-react'
+import {serializeFormData} from '@/lib/serializeFormData'
+import type {FormAction} from '@/models/serverFunctions'
 
 type Props = {
   defaultValues?: Partial<CampaignFormValues>
   submitLabel: string
   isEditMode: boolean
+  action: FormAction<void>
 }
 
-export default function CampaignForm({defaultValues, submitLabel, isEditMode}: Props) {
+export default function CampaignForm({defaultValues, submitLabel, isEditMode, action}: Props) {
   const form = useForm<CampaignFormValues>({
-    resolver: zodResolver(isEditMode ? updateCampaignSchema : createCampaignSchema),
+    resolver: zodResolver(isEditMode ? updateCampaignSchema : createCampaignSchema) as Resolver<CampaignFormValues>,
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -45,38 +48,23 @@ export default function CampaignForm({defaultValues, submitLabel, isEditMode}: P
     register,
     setValue,
     control,
-    watch,
+    getValues,
     handleSubmit,
     formState: {errors},
   } = form
   const router = useRouter()
+  const investigators = useWatch({control, name: 'investigators'}) ?? []
+  const investigationSessionNpcs = useWatch({control, name: 'investigationSessions.0.npcs'}) ?? []
+  const investigationSessionLocations = useWatch({control, name: 'investigationSessions.0.locations'}) ?? []
 
   const onSubmit = async (formData: CampaignFormValues) => {
     try {
-      console.log('Form data being submitted:', formData)
-
-      const response = await fetch('/api/campaign', {
-        method: isEditMode ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(isEditMode ? {campaignId: defaultValues?.id, formData} : formData),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        console.log('Campaign created successfully:', data)
-        if (isEditMode) {
-          router.push(`/campaigns/${defaultValues?.id}`)
-        } else {
-          router.push('/dashboard')
-        }
-      } else {
-        console.error('Error in API response:', data.message)
-        alert('Failed to create campaign: ' + data.message)
-      }
+      await action({success: true}, serializeFormData(isEditMode && defaultValues?.id ? {...formData, id: defaultValues.id} : formData))
     } catch (error) {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+        throw error
+      }
+
       console.error('Error in onSubmit:', error)
       alert('Error submitting the form. Please try again later.')
     }
@@ -128,16 +116,22 @@ export default function CampaignForm({defaultValues, submitLabel, isEditMode}: P
         <CardContent>
           <div className="space-y-1">
             <Label>Status</Label>
-            <Select value={watch('status')} onValueChange={v => setValue('status', v as CampaignStatus)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="planning">Planning</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
+            <Controller
+              control={control}
+              name="status"
+              render={({field}) => (
+                <Select value={field.value} onValueChange={v => field.onChange(v as CampaignStatus)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="planning">Planning</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {errors.status && <p className="text-sm text-destructive">{errors.status.message}</p>}
           </div>
         </CardContent>
@@ -151,7 +145,7 @@ export default function CampaignForm({defaultValues, submitLabel, isEditMode}: P
         <CardContent className="space-y-4">
           {/* Displaying all the investigators */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {watch('investigators', []).map((investigator, index) => (
+            {investigators.map((investigator, index) => (
               <Card key={index} className="hover:border-primary/50 transition-colors">
                 <CardHeader className="text-center pb-3">
                   <Avatar className="w-24 h-24 mx-auto mb-3">
@@ -208,7 +202,7 @@ export default function CampaignForm({defaultValues, submitLabel, isEditMode}: P
             type="button"
             variant="outline"
             onClick={() => {
-              const currentInvestigators = watch('investigators', [])
+              const currentInvestigators = getValues('investigators') ?? []
               setValue('investigators', [
                 ...currentInvestigators,
                 {
@@ -275,7 +269,7 @@ export default function CampaignForm({defaultValues, submitLabel, isEditMode}: P
             {/* NPCs Section */}
             <TabsContent value="npcs">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {watch('investigationSessions.0.npcs', []).map((npc, index) => (
+                {investigationSessionNpcs.map((npc, index) => (
                   <Card key={index} className="hover:border-primary/50 transition-colors">
                     <CardHeader className="text-center pb-3">
                       <Avatar className="w-20 h-20 mx-auto mb-3">
@@ -320,7 +314,7 @@ export default function CampaignForm({defaultValues, submitLabel, isEditMode}: P
                 type="button"
                 variant="outline"
                 onClick={() => {
-                  const currentNPCs = watch('investigationSessions.0.npcs', []) // Ensure npcs is an empty array
+                  const currentNPCs = getValues('investigationSessions.0.npcs') ?? []
                   setValue('investigationSessions.0.npcs', [
                     ...currentNPCs,
                     {id: '', name: '', role: '', description: '', portrait: '', isNPC: true},
@@ -333,7 +327,7 @@ export default function CampaignForm({defaultValues, submitLabel, isEditMode}: P
             {/* Locations Section */}
             <TabsContent value="locations">
               <div className="space-y-4">
-                {watch('investigationSessions.0.locations', []).map((location, index) => (
+                {investigationSessionLocations.map((location, index) => (
                   <Card key={index}>
                     <CardHeader>
                       <CardTitle className="font-serif text-lg">
@@ -357,7 +351,7 @@ export default function CampaignForm({defaultValues, submitLabel, isEditMode}: P
                 type="button"
                 variant="outline"
                 onClick={() => {
-                  const currentLocations = watch('investigationSessions.0.locations')
+                  const currentLocations = getValues('investigationSessions.0.locations') ?? []
                   setValue('investigationSessions.0.locations', [
                     ...currentLocations,
                     {id: '', name: '', description: ''},

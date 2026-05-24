@@ -1,6 +1,6 @@
 'use client'
 
-import {useForm} from 'react-hook-form'
+import {Controller, useForm, useWatch, type Resolver} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import {Button} from '@/components/ui/button'
@@ -13,17 +13,20 @@ import {Checkbox} from '@/components/ui/checkbox'
 import {createMonsterSchema} from '@/schemas/monster.schema'
 import type {MonsterFormValues} from '@/types/monster-form'
 import type {SpellDto} from '@/types/spell'
+import type {FormAction} from '@/models/serverFunctions'
+import {serializeFormData} from '@/lib/serializeFormData'
 
 type Props = {
   defaultValues?: Partial<MonsterFormValues>
+  monsterId?: string
   submitLabel: string
-  action: (formData: FormData) => Promise<void>
+  action: FormAction<void>
   spells: SpellDto[]
 }
 
-export default function MonsterForm({defaultValues, submitLabel, action, spells}: Props) {
+export default function MonsterForm({defaultValues, monsterId, submitLabel, action, spells}: Props) {
   const form = useForm<MonsterFormValues>({
-    resolver: zodResolver(createMonsterSchema),
+    resolver: zodResolver(createMonsterSchema) as Resolver<MonsterFormValues>,
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -36,14 +39,29 @@ export default function MonsterForm({defaultValues, submitLabel, action, spells}
   const {
     register,
     setValue,
-    watch,
+    control,
+    handleSubmit,
     formState: {errors},
   } = form
 
-  const selectedSpellIds = watch('spellIds')
+  const selectedSpellIds = useWatch({control, name: 'spellIds'}) ?? []
+
+  const onSubmit = async (formData: MonsterFormValues) => {
+    try {
+      const payload = monsterId ? {...formData, id: monsterId} : formData
+      await action({success: true}, serializeFormData(payload))
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+        throw error
+      }
+
+      console.error('Error submitting monster form:', error)
+      alert('Error submitting monster form. Please try again later.')
+    }
+  }
 
   return (
-    <form action={action}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-6">
 
         {/* BASIC INFO */}
@@ -69,22 +87,26 @@ export default function MonsterForm({defaultValues, submitLabel, action, spells}
               {/* hidden input so RHF + FormData work */}
               <input type="hidden" {...register('category')} />
 
-              <Select
-                value={watch('category')}
-                onValueChange={v => form.setValue('category', v as MonsterFormValues['category'])}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="minor">Minor Creature</SelectItem>
-                  <SelectItem value="major">Major Threat</SelectItem>
-                  <SelectItem value="mythos">Mythos Entity</SelectItem>
-                  <SelectItem value="humanoid">Humanoid</SelectItem>
-                  <SelectItem value="undead">Undead</SelectItem>
-                  <SelectItem value="beast">Beast</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                control={control}
+                name="category"
+                render={({field}) => (
+                  <Select value={field.value} onValueChange={v => field.onChange(v as MonsterFormValues['category'])}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="minor">Minor Creature</SelectItem>
+                      <SelectItem value="major">Major Threat</SelectItem>
+                      <SelectItem value="mythos">Mythos Entity</SelectItem>
+                      <SelectItem value="humanoid">Humanoid</SelectItem>
+                      <SelectItem value="undead">Undead</SelectItem>
+                      <SelectItem value="beast">Beast</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
 
               {errors.category && (
                 <p className="text-sm text-destructive">

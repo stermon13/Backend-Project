@@ -1,6 +1,10 @@
 import {z} from 'zod'
 import {derivedStatsSchema} from '@/schemas/character.schema'
 
+const dateSchema = z.coerce.date().refine(date => !isNaN(date.getTime()), {
+  message: 'Date must be a valid date',
+})
+
 const npcSchema = z.object({
   id: z.string(),
   name: z.string().min(1),
@@ -19,7 +23,7 @@ const locationSchema = z.object({
 const investigationSessionSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1),
-  sessionNumber: z.number().int().min(1),
+  sessionNumber: z.coerce.number().int().min(1),
   summary: z.string().min(1),
   details: z.string().min(1),
   clues: z
@@ -30,9 +34,7 @@ const investigationSessionSchema = z.object({
       }),
     )
     .min(1, 'At least one clue is required'),
-  date: z.date().refine(date => !isNaN(date.getTime()), {
-    message: 'Date must be a valid date',
-  }),
+  date: dateSchema,
   npcs: z.array(npcSchema),
   locations: z.array(locationSchema),
 })
@@ -42,15 +44,13 @@ const campaignBaseSchema = z.object({
   edition: z.string().min(1, 'Edition is required'),
   description: z.string().min(1, 'Description is required'),
   status: z.enum(['planning', 'active', 'completed']),
-  startedDate: z.date().refine(date => !isNaN(date.getTime()), {
-    message: 'Start date must be a valid date',
+  startedDate: dateSchema,
+  sessionCount: z.coerce.number().int().min(0, 'Session count must be a positive number'),
+  keeper: z.object({
+    id: z.string(),
+    username: z.string(),
+    email: z.string(),
   }),
-  sessionCount: z.number().int().min(0, 'Session count must be a positive number'),
-    keeper: z.object({
-      id: z.string(),
-      username: z.string(),
-      email: z.string(),
-    }),
   investigators: z.array(
     z.object({
       id: z.string(),

@@ -1,64 +1,40 @@
-import { NextResponse } from 'next/server'
-import { CreateItem, UpdateItem, DeleteItem } from '@/serverFunctions/items'
+import {z} from 'zod'
+import {createItem, deleteItem, updateItem} from '@/dal/items'
 import {createItemSchema, updateItemSchema} from '@/schemas/item.schema'
-import {requireRole} from '@/lib/auth'
+import {protectedApiRoute} from '@/lib/apiRoute'
+import {created, ok} from '@/lib/routeResponses'
 
-export async function POST(request: Request) {
-  await requireRole(['Admin', 'Keeper'])
-  try {
-    const parsedData = await request.json()
-    console.error('Validation error:', parsedData)
-    const result = createItemSchema.safeParse(parsedData)
-    console.error(result)
-    if (!result.success) {
-      console.error('Validation error:', result.error)
-      return NextResponse.json({error: result.error}, {status: 400})
-    }
+const updateItemRequestSchema = updateItemSchema.extend({
+  id: z.string().min(1, 'Missing item id'),
+})
 
-    const newItem = await CreateItem(result.data)
-    return NextResponse.json(newItem, {status: 201})
-  } catch (error) {
-    console.error('Error creating item:', error)
-    return NextResponse.json({error: 'Failed to create item'}, {status: 500})
-  }
-}
+const deleteItemRequestSchema = z.object({
+  id: z.string().min(1, 'Missing item id'),
+})
 
-export async function PUT(request: Request) {
-  await requireRole(['Admin', 'Keeper'])
-  try {
-    const parsedData = await request.json()
-    const {id, ...updatedData} = parsedData
+export const POST = protectedApiRoute({
+  authenticationType: 'cookie',
+  requiredRoles: ['Admin', 'Keeper'],
+  schema: createItemSchema,
+  routeFn: async ({data}) => created(await createItem(data)),
+})
 
-    const result = updateItemSchema.safeParse(updatedData)
-    if (!result.success) {
-      console.error('Validation error:', result.error)
-      return NextResponse.json({error: result.error}, {status: 400})
-    }
+export const PUT = protectedApiRoute({
+  authenticationType: 'cookie',
+  requiredRoles: ['Admin', 'Keeper'],
+  schema: updateItemRequestSchema,
+  routeFn: async ({data}) => {
+    const {id, ...updatedData} = data
+    return ok(await updateItem(id, updatedData))
+  },
+})
 
-    const updatedItem = await UpdateItem(id, result.data)
-    return NextResponse.json(updatedItem)
-  } catch (error) {
-    console.error('Error updating item:', error)
-    return NextResponse.json({error: 'Failed to update item'}, {status: 500})
-  }
-}
-
-
-
-export async function DELETE(request: Request) {
-  await requireRole(['Admin', 'Keeper'])
-
-  const {id} = await request.json()
-
-  if (!id) {
-    return NextResponse.json({error: 'Missing id'}, {status: 400})
-  }
-
-  try {
-    await DeleteItem(id)
-    return NextResponse.json({success: true})
-  } catch (error) {
-    console.error('Error deleting item:', error)
-    return NextResponse.json({error: 'Failed to delete item'}, {status: 500})
-  }
-}
+export const DELETE = protectedApiRoute({
+  authenticationType: 'cookie',
+  requiredRoles: ['Admin', 'Keeper'],
+  schema: deleteItemRequestSchema,
+  routeFn: async ({data}) => {
+    await deleteItem(data.id)
+    return ok({success: true})
+  },
+})

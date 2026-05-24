@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation'
 import {proxyGetAllItems} from '@/proxy/items'
 import ItemsClient from '@/components/custom/items/items'
+import {createItemAction, updateItemAction, deleteItemAction} from '@/serverFunctions/items'
 
 export default async function ItemsPage() {
   let items
@@ -11,6 +12,6 @@ export default async function ItemsPage() {
     redirect('/dashboard')
   }
 
-  return <ItemsClient items={items} />
+  return <ItemsClient items={items} createAction={createItemAction} updateAction={updateItemAction} deleteAction={deleteItemAction} />
 }
 
